@@ -2089,6 +2089,7 @@ input[type="range"]::-moz-range-thumb {
   padding: var(--space-12) var(--space-6);
   position: relative;
   box-sizing: border-box;
+  scroll-margin-top: 100px;
 }
 
 /* Hero Section */
