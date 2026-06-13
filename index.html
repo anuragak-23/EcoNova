@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Carbon Footprint Awareness Platform — Understand, track, and reduce your carbon footprint through simple actions and personalized insights.">
+  <meta name="keywords" content="carbon footprint, climate change, sustainability, eco-friendly, carbon calculator, green living">
+  <meta name="author" content="Carbon Footprint Awareness Platform">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Carbon Footprint Awareness Platform">
+  <meta property="og:description" content="Understand, track, and reduce your carbon footprint through simple actions and personalized insights.">
+  <meta property="og:type" content="website">
+
+  <title>🌍 EcoTrack — Carbon Footprint Awareness Platform</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ── Header ──────────────────────────────────── -->
+    <header class="app-header">
+      <div class="app-logo">
+        <div class="app-logo-icon">🌍</div>
+        <div class="app-logo-text">EcoTrack <span>| Carbon Aware</span></div>
+      </div>
+      <nav class="header-nav" id="header-nav">
+        <button class="nav-link active" data-tab="dashboard">
+          <span class="nav-link-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-link" data-tab="calculator">
+          <span class="nav-link-icon">🧮</span> Calculator
+        </button>
+        <button class="nav-link" data-tab="actions">
+          <span class="nav-link-icon">✅</span> Actions
+        </button>
+        <button class="nav-link" data-tab="insights">
+          <span class="nav-link-icon">💡</span> Insights
+        </button>
+        <button class="nav-link" data-tab="profile">
+          <span class="nav-link-icon">👤</span> Profile
+        </button>
+      </nav>
+      <div class="header-actions">
+        <div class="header-streak" id="header-streak" style="display:none">
+          <span class="streak-fire">🔥</span>
+          <span id="header-streak-value">0</span> day streak
+        </div>
+        <div class="header-points" id="header-points" style="display:none">
+          💎 <span id="header-points-value">0</span> pts
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          ☀️
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Main Content ────────────────────────────── -->
+    <main class="app-main">
+
+      <!-- Dashboard Tab -->
+      <section class="tab-content active" id="tab-dashboard">
+        <div id="dashboard-content">
+          <!-- Rendered by dashboard.js -->
+        </div>
+      </section>
+
+      <!-- Calculator Tab -->
+      <section class="tab-content" id="tab-calculator">
+        <div id="calculator-content">
+          <!-- Rendered by calculator.js -->
+        </div>
+      </section>
+
+      <!-- Actions Tab -->
+      <section class="tab-content" id="tab-actions">
+        <div id="actions-content">
+          <!-- Rendered by actions.js -->
+        </div>
+      </section>
+
+      <!-- Insights Tab -->
+      <section class="tab-content" id="tab-insights">
+        <div id="insights-content">
+          <!-- Rendered by insights.js -->
+        </div>
+      </section>
+
+      <!-- Profile Tab -->
+      <section class="tab-content" id="tab-profile">
+        <div id="profile-content">
+          <!-- Rendered by app.js -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── Bottom Navigation ───────────────────────── -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-item active" data-tab="dashboard" id="nav-dashboard">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-tab="calculator" id="nav-calculator">
+        <span class="nav-icon">🧮</span>
+        <span>Calculator</span>
+      </button>
+      <button class="nav-item" data-tab="actions" id="nav-actions">
+        <span class="nav-icon">✅</span>
+        <span>Actions</span>
+      </button>
+      <button class="nav-item" data-tab="insights" id="nav-insights">
+        <span class="nav-icon">💡</span>
+        <span>Insights</span>
+      </button>
+      <button class="nav-item" data-tab="profile" id="nav-profile">
+        <span class="nav-icon">👤</span>
+        <span>Profile</span>
+      </button>
+    </nav>
+
+    <!-- ── Toast Notification ──────────────────────── -->
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <!-- App Scripts (ES Modules) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
