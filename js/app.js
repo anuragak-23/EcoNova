@@ -10,6 +10,16 @@ import { initCalculator } from './calculator.js';
 import { initActions, refreshActions } from './actions.js';
 import { initInsights } from './insights.js';
 import { initGamification, checkBadges, getLevel, getLevelProgress, showBadgeNotification, getAvatarInfo } from './gamification.js';
+import { 
+  initAuth, 
+  signIn, 
+  signUp, 
+  signInWithGoogle, 
+  signInAsGuest, 
+  signOutUser, 
+  getCurrentUser,
+  resetPassword
+} from './auth.js';
 
 let currentTab = 'dashboard';
 let initialized = false;
@@ -32,12 +42,11 @@ function initApp() {
   // Setup landing page triggers
   setupLandingPage();
 
-  // Check if new user
-  if (isNewUser()) {
-    showOnboarding();
-  } else {
-    bootApp();
-  }
+  // Bind Auth Forms event listeners
+  setupAuthFormListeners();
+
+  // Initialize auth
+  initAuth(onAuthChange);
 
   // Trigger initial Lucide SVGs creation
   if (window.lucide) {
@@ -45,6 +54,217 @@ function initApp() {
   }
 
   initialized = true;
+}
+
+function onAuthChange(user) {
+  const authPage = document.getElementById('auth-page');
+  const appContainer = document.getElementById('app');
+  const guestBanner = document.getElementById('guest-banner');
+  const headerUserMenu = document.getElementById('header-user-menu');
+  const onboardingOverlay = document.getElementById('onboarding-overlay');
+
+  if (!user) {
+    // Show auth overlay, hide app
+    if (authPage) authPage.style.display = 'flex';
+    if (appContainer) appContainer.style.display = 'none';
+    if (guestBanner) guestBanner.style.display = 'none';
+    if (headerUserMenu) headerUserMenu.style.display = 'none';
+    if (onboardingOverlay) onboardingOverlay.style.display = 'none';
+    return;
+  }
+
+  // User is logged in!
+  if (authPage) authPage.style.display = 'none';
+  if (appContainer) appContainer.style.display = 'block';
+
+  // Toggle guest banner
+  if (user.isAnonymous) {
+    if (guestBanner) guestBanner.style.display = 'block';
+  } else {
+    if (guestBanner) guestBanner.style.display = 'none';
+  }
+
+  // Setup user menu
+  if (headerUserMenu) {
+    headerUserMenu.style.display = 'flex';
+    const avatarEmoji = document.getElementById('header-avatar-emoji');
+    const profile = getProfile();
+    const level = getLevel(profile.ecoPoints || 0);
+    if (avatarEmoji && level) {
+      avatarEmoji.textContent = level.icon || '🌱';
+    }
+    const dropName = document.getElementById('dropdown-user-name');
+    const dropEmail = document.getElementById('dropdown-user-email');
+    if (dropName) dropName.textContent = user.displayName || 'Eco Explorer';
+    if (dropEmail) dropEmail.textContent = user.email || 'explorer@econova.ai';
+  }
+
+  // Bind avatar dropdown click toggle
+  setupProfileDropdown();
+
+  // Check onboarding status
+  const profile = getProfile();
+  if (!user.isAnonymous && !profile.onboardingCompleted) {
+    showOnboardingFlow();
+  } else {
+    if (onboardingOverlay) onboardingOverlay.style.display = 'none';
+    bootApp();
+  }
+}
+
+let isProfileDropdownSetup = false;
+function setupProfileDropdown() {
+  if (isProfileDropdownSetup) return;
+
+  const avatarBtn = document.getElementById('header-avatar-btn');
+  const dropdown = document.getElementById('profile-dropdown');
+
+  avatarBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown?.classList.toggle('show');
+  });
+
+  document.addEventListener('click', () => {
+    dropdown?.classList.remove('show');
+  });
+
+  document.getElementById('btn-dropdown-dashboard')?.addEventListener('click', () => {
+    switchTab('dashboard');
+    dropdown?.classList.remove('show');
+  });
+
+  document.getElementById('btn-dropdown-profile')?.addEventListener('click', () => {
+    switchTab('profile');
+    dropdown?.classList.remove('show');
+  });
+
+  document.getElementById('btn-dropdown-logout')?.addEventListener('click', async () => {
+    dropdown?.classList.remove('show');
+    if (confirm('Are you sure you want to log out?')) {
+      await signOutUser();
+    }
+  });
+
+  isProfileDropdownSetup = true;
+}
+
+function setupAuthFormListeners() {
+  const tabSigninBtn = document.getElementById('tab-signin-btn');
+  const tabSignupBtn = document.getElementById('tab-signup-btn');
+  const signinForm = document.getElementById('signin-form');
+  const signupForm = document.getElementById('signup-form');
+  
+  tabSigninBtn?.addEventListener('click', () => {
+    tabSigninBtn.classList.add('active');
+    tabSignupBtn?.classList.remove('active');
+    signinForm?.classList.add('active');
+    signupForm?.classList.remove('active');
+  });
+
+  tabSignupBtn?.addEventListener('click', () => {
+    tabSignupBtn.classList.add('active');
+    tabSigninBtn?.classList.remove('active');
+    signupForm?.classList.add('active');
+    signinForm?.classList.remove('active');
+  });
+
+  signinForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signin-email')?.value.trim();
+    const password = document.getElementById('signin-password')?.value;
+    const rememberMe = document.getElementById('signin-remember')?.checked;
+
+    const submitBtn = document.getElementById('btn-signin-submit');
+    const originalText = submitBtn ? submitBtn.textContent : 'Sign In';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in...';
+    }
+
+    try {
+      await signIn(email, password, rememberMe);
+    } catch (err) {
+      alert('Error: ' + err.message);
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    }
+  });
+
+  signupForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('signup-name')?.value.trim();
+    const email = document.getElementById('signup-email')?.value.trim();
+    const password = document.getElementById('signup-password')?.value;
+    const confirmPassword = document.getElementById('signup-confirm-password')?.value;
+    const country = document.getElementById('signup-country')?.value || 'IN';
+
+    if (password !== confirmPassword) {
+      alert('Error: Passwords do not match.');
+      return;
+    }
+
+    const submitBtn = document.getElementById('btn-signup-submit');
+    const originalText = submitBtn ? submitBtn.textContent : 'Create Account';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating Account...';
+    }
+
+    try {
+      await signUp(email, password, name, country);
+    } catch (err) {
+      alert('Error: ' + err.message);
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    }
+  });
+
+  const forgotPasswordBtn = document.getElementById('btn-forgot-password');
+  forgotPasswordBtn?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signin-email')?.value.trim();
+    if (!email) {
+      alert('Please enter your email address in the Email field first.');
+      return;
+    }
+
+    try {
+      await resetPassword(email);
+      alert('📩 Reset link sent! Please check your email inbox.');
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  });
+
+  const googleBtn = document.getElementById('btn-google-auth');
+  googleBtn?.addEventListener('click', async () => {
+    const originalText = googleBtn.innerHTML;
+    googleBtn.disabled = true;
+    googleBtn.textContent = 'Connecting...';
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      alert('Error: ' + err.message);
+      googleBtn.disabled = false;
+      googleBtn.innerHTML = originalText;
+    }
+  });
+
+  const guestBtn = document.getElementById('btn-guest-login');
+  guestBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    signInAsGuest();
+  });
+
+  const guestBannerAuthLink = document.getElementById('guest-banner-auth');
+  guestBannerAuthLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    signOutUser();
+  });
 }
 
 function bootApp() {
@@ -219,59 +439,120 @@ function updateHeaderDisplay() {
 }
 
 // ── Onboarding ──────────────────────────────────────────────
-function showOnboarding() {
-  const overlay = document.createElement('div');
-  overlay.className = 'onboarding-overlay';
-  overlay.id = 'onboarding';
+let onboardingCurrentStep = 1;
 
-  overlay.innerHTML = `
-    <div class="onboarding-card">
-      <div class="onboarding-icon">🌍</div>
-      <h2 class="onboarding-title">Welcome to EcoNova!</h2>
-      <p class="onboarding-text">
-        Your personal carbon footprint companion. Track your emissions, log eco-actions, earn badges, and make a real difference for our planet.
-      </p>
-      <input type="text" class="onboarding-input" id="onboarding-name"
-        placeholder="What should we call you?"
-        value="Eco Warrior" maxlength="30">
-      <button class="btn btn-primary btn-lg btn-block" id="onboarding-start">
-        Let's Get Started! 🌱
-      </button>
-    </div>
-  `;
+function showOnboardingFlow() {
+  const onboardingOverlay = document.getElementById('onboarding-overlay');
+  if (!onboardingOverlay) return;
 
-  document.body.appendChild(overlay);
+  onboardingOverlay.style.display = 'flex';
+  onboardingCurrentStep = 1;
+  updateOnboardingSlide();
 
-  // Focus input
-  setTimeout(() => {
-    document.getElementById('onboarding-name')?.focus();
-    document.getElementById('onboarding-name')?.select();
-  }, 500);
+  const onboardNameInput = document.getElementById('onboard-name');
+  if (onboardNameInput) {
+    const user = getCurrentUser();
+    onboardNameInput.value = user?.displayName || 'Eco Champion';
+  }
 
-  // Handle start
-  document.getElementById('onboarding-start')?.addEventListener('click', () => {
-    const nameInput = document.getElementById('onboarding-name');
-    const name = nameInput?.value.trim() || 'Eco Warrior';
+  const nextBtn = document.getElementById('btn-onboard-next');
+  const backBtn = document.getElementById('btn-onboard-back');
 
+  if (nextBtn) {
+    const newNextBtn = nextBtn.cloneNode(true);
+    nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+    newNextBtn.addEventListener('click', handleOnboardNext);
+  }
+  if (backBtn) {
+    const newBackBtn = backBtn.cloneNode(true);
+    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+    newBackBtn.addEventListener('click', handleOnboardBack);
+  }
+}
+
+function updateOnboardingSlide() {
+  const slides = document.querySelectorAll('.onboarding-slide');
+  const stepIndicator = document.getElementById('onboarding-current-step');
+  const progressFill = document.getElementById('onboarding-progress-fill');
+  const backBtn = document.getElementById('btn-onboard-back');
+  const nextBtn = document.getElementById('btn-onboard-next');
+  const navButtons = document.getElementById('onboarding-nav-buttons');
+
+  slides.forEach(slide => {
+    const step = parseInt(slide.dataset.step, 10);
+    slide.classList.toggle('active', step === onboardingCurrentStep);
+  });
+
+  if (stepIndicator) stepIndicator.textContent = onboardingCurrentStep;
+  if (progressFill) {
+    const pct = onboardingCurrentStep === 4 ? 100 : (onboardingCurrentStep / 3) * 100;
+    progressFill.style.width = `${pct}%`;
+  }
+
+  if (onboardingCurrentStep === 1) {
+    if (backBtn) backBtn.style.visibility = 'hidden';
+  } else {
+    if (backBtn) backBtn.style.visibility = 'visible';
+  }
+
+  if (onboardingCurrentStep === 4) {
+    if (navButtons) navButtons.style.display = 'none';
+  } else {
+    if (navButtons) navButtons.style.display = 'flex';
+  }
+
+  if (onboardingCurrentStep === 3) {
+    if (nextBtn) nextBtn.textContent = 'Finish';
+  } else {
+    if (nextBtn) nextBtn.textContent = 'Continue';
+  }
+}
+
+function handleOnboardBack() {
+  if (onboardingCurrentStep > 1) {
+    onboardingCurrentStep--;
+    updateOnboardingSlide();
+  }
+}
+
+function handleOnboardNext() {
+  if (onboardingCurrentStep === 1) {
+    const nameInput = document.getElementById('onboard-name');
+    const name = nameInput?.value.trim();
+    if (!name) {
+      alert('Please enter your name.');
+      return;
+    }
     const profile = getProfile();
     profile.name = name;
-    profile.createdAt = new Date().toISOString();
+    saveProfile(profile);
+  }
+
+  if (onboardingCurrentStep < 3) {
+    onboardingCurrentStep++;
+    updateOnboardingSlide();
+  } else if (onboardingCurrentStep === 3) {
+    const lifestyleVal = document.querySelector('input[name="onboard-lifestyle"]:checked')?.value || 'student';
+    const goalVal = document.querySelector('input[name="onboard-goal"]:checked')?.value || 'reduce_emissions';
+
+    const profile = getProfile();
+    profile.onboardingCompleted = true;
+    if (!profile.settings) profile.settings = {};
+    profile.settings.lifestyle = lifestyleVal;
+    profile.settings.sustainabilityGoal = goalVal;
     saveProfile(profile);
 
-    overlay.style.opacity = '0';
-    overlay.style.transition = 'opacity 0.3s ease';
-    setTimeout(() => {
-      overlay.remove();
-      bootApp();
-    }, 300);
-  });
+    onboardingCurrentStep = 4;
+    updateOnboardingSlide();
 
-  // Enter key
-  document.getElementById('onboarding-name')?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      document.getElementById('onboarding-start')?.click();
-    }
-  });
+    setTimeout(() => {
+      const onboardingOverlay = document.getElementById('onboarding-overlay');
+      if (onboardingOverlay) onboardingOverlay.style.display = 'none';
+      switchTab('calculator');
+      initCalculator();
+      bootApp();
+    }, 1500);
+  }
 }
 
 // ── Profile Tab ─────────────────────────────────────────────
@@ -540,6 +821,13 @@ function renderProfile() {
         </div>
         <button class="btn btn-danger" id="profile-reset">Reset Data</button>
       </div>
+      <div class="settings-item">
+        <div>
+          <div class="settings-label">🚪 Sign Out</div>
+          <div class="settings-desc">Sign out of your EcoNova session</div>
+        </div>
+        <button class="btn btn-outline" id="profile-logout">Sign Out</button>
+      </div>
     </div>
   `;
 
@@ -561,6 +849,12 @@ function renderProfile() {
     if (confirm('⚠️ Are you sure? This will delete ALL your data including footprint, actions, badges, and points. This cannot be undone.')) {
       resetAllData();
       location.reload();
+    }
+  });
+
+  document.getElementById('profile-logout')?.addEventListener('click', async () => {
+    if (confirm('Are you sure you want to log out?')) {
+      await signOutUser();
     }
   });
 
