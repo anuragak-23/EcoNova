@@ -371,15 +371,15 @@ function renderProfile() {
           <div style="position:absolute; width:120px; height:120px; background:rgba(59,130,246,0.12); border-radius:50%; bottom:-30px; left:-35px; filter:blur(25px); pointer-events:none;"></div>
           
           <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #34D399; font-weight: 700; margin-bottom: 0.25rem;">Official Scorecard</div>
-          <div style="font-size: 2.25rem; font-weight: 800; font-family:'Outfit',sans-serif; margin-bottom: 1.25rem; background: linear-gradient(135deg, #10B981, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EcoTrack</div>
+          <div style="font-size: 2.25rem; font-weight: 700; font-family:'Space Grotesk',sans-serif; margin-bottom: 1.25rem; background: linear-gradient(135deg, #10B981, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EcoTrack</div>
           
           <div style="font-size: 2.8rem; margin-bottom: 0.5rem; animation: floatAvatar 3s ease-in-out infinite alternate;">${avatarInfo.avatar}</div>
-          <div style="font-size: 1.25rem; font-weight: 700; font-family:'Outfit',sans-serif;">${profile.name || 'Eco Warrior'}</div>
+          <div style="font-size: 1.25rem; font-weight: 700; font-family:'Space Grotesk',sans-serif;">${profile.name || 'Eco Warrior'}</div>
           <div style="font-size: 0.8rem; color: #94A3B8; margin-bottom: 1.5rem;">Rank: ${avatarInfo.rank}</div>
           
           <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 1rem; padding: 1.25rem; margin-bottom: 1.25rem;">
             <div style="font-size: 0.7rem; text-transform: uppercase; color: #94A3B8; letter-spacing: 0.05em;">Carbon Footprint</div>
-            <div style="font-size: 2.2rem; font-weight: 800; color: #10B981; margin: 0.25rem 0;">${profile.footprint?.total || '0'} <span style="font-size:0.95rem; font-weight:500; color:white;">tonnes/yr</span></div>
+            <div style="font-size: 2.2rem; font-weight: 700; font-family:'Space Grotesk',sans-serif; font-variant-numeric: tabular-nums; color: #10B981; margin: 0.25rem 0;">${profile.footprint?.total || '0'} <span style="font-size:0.95rem; font-weight:500; font-family:'Inter',sans-serif; color:white;">tonnes/yr</span></div>
             <div style="font-size: 0.75rem; color: #34D399; font-weight: 600;">
               ${(profile.footprint?.total || 0) <= 4.7 ? '🌿 Better than Global Average' : '⚠️ Above Global Average'}
             </div>

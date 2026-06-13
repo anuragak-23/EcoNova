@@ -112,7 +112,7 @@ A **beautiful, interactive web platform** that empowers individuals to:
 | **Logic** | Vanilla JavaScript (ES6+) | No framework overhead, fast load times |
 | **Charts** | Chart.js (CDN) | Lightweight, beautiful, responsive charts |
 | **Icons** | Lucide Icons (CDN) | Modern, consistent icon set |
-| **Fonts** | Google Fonts (Inter + Outfit) | Clean, modern typography |
+| **Fonts** | Google Fonts (Inter + Space Grotesk) | Clean, modern typography |
 | **Storage** | LocalStorage API | Client-side data persistence, no backend needed |
 | **Animations** | CSS Keyframes + JS IntersectionObserver | Smooth, performant micro-animations |
 
@@ -290,7 +290,7 @@ Total Footprint (tonnes CO₂e/year) =
 
 ### Typography
 ```css
---font-heading: 'Outfit', sans-serif;    /* Bold, modern headings */
+--font-heading: 'Space Grotesk', sans-serif;    /* Bold, modern headings */
 --font-body: 'Inter', sans-serif;        /* Clean, readable body text */
 ```
 

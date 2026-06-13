@@ -336,7 +336,7 @@ function renderBreakdownChart(footprint) {
         y: {
           grid: { display: false },
           ticks: {
-            font: { family: "'Outfit', sans-serif", size: 13, weight: '600' },
+            font: { family: "'Space Grotesk', sans-serif", size: 13, weight: '600' },
             color: '#475569',
           },
           border: { display: false },

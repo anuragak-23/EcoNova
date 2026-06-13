@@ -160,7 +160,7 @@ export const IMPACT_EQUIVALENTS = {
 // ── Calculator Questions ────────────────────────────────────
 export const CALCULATOR_QUESTIONS = {
   transport: {
-    title: 'Transportation',
+    title: 'How do you travel?',
     icon: '🚗',
     description: 'How do you get around?',
     questions: [
@@ -212,7 +212,7 @@ export const CALCULATOR_QUESTIONS = {
     ]
   },
   energy: {
-    title: 'Home Energy',
+    title: 'How much electricity do you use?',
     icon: '🏠',
     description: 'Your home energy usage',
     questions: [
@@ -262,7 +262,7 @@ export const CALCULATOR_QUESTIONS = {
     ]
   },
   food: {
-    title: 'Food & Diet',
+    title: 'What does your diet look like?',
     icon: '🍔',
     description: 'What you eat matters',
     questions: [
@@ -310,7 +310,7 @@ export const CALCULATOR_QUESTIONS = {
     ]
   },
   lifestyle: {
-    title: 'Shopping & Lifestyle',
+    title: 'What do your consumption habits look like?',
     icon: '🛍️',
     description: 'Your consumption habits',
     questions: [

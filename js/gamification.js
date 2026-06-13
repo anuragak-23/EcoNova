@@ -139,11 +139,11 @@ export function showBadgeNotification(badge) {
 
   notification.innerHTML = `
     <div style="font-size:4rem; margin-bottom:1rem; animation: badgeBounce 0.6s ease 0.3s both;">${badge.icon}</div>
-    <h3 style="font-family:'Outfit',sans-serif; font-size:1.25rem; margin-bottom:0.5rem;">
+    <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.25rem; margin-bottom:0.5rem;">
       Badge Unlocked! 🎉
     </h3>
-    <p style="font-weight:700; color:#10B981; font-size:1.1rem; margin-bottom:0.5rem;">${badge.label}</p>
-    <p style="color:${descColor}; font-size:0.875rem;">${badge.description}</p>
+    <p style="font-family:'Inter',sans-serif; font-weight:600; color:#10B981; font-size:1.1rem; margin-bottom:0.5rem;">${badge.label}</p>
+    <p style="font-family:'Inter',sans-serif; color:${descColor}; font-size:0.875rem;">${badge.description}</p>
     <button style="
       margin-top:1.5rem;
       padding:0.5rem 2rem;
@@ -151,6 +151,7 @@ export function showBadgeNotification(badge) {
       color:white;
       border:none;
       border-radius:0.75rem;
+      font-family:'Inter',sans-serif;
       font-weight:600;
       font-size:0.875rem;
       cursor:pointer;
