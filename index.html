@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Carbon Footprint Awareness Platform — Understand, track, and reduce your carbon footprint through simple actions and personalized insights.">
-  <meta name="keywords" content="carbon footprint, climate change, sustainability, eco-friendly, carbon calculator, green living">
-  <meta name="author" content="Carbon Footprint Awareness Platform">
+  <meta name="description" content="EcoTrack — Understand, track, and reduce your carbon footprint through simple actions and personalized AI insights.">
+  <meta name="keywords" content="carbon footprint, climate change, sustainability, eco-friendly, carbon calculator, green living, AI coach">
+  <meta name="author" content="EcoTrack">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Carbon Footprint Awareness Platform">
+  <meta property="og:title" content="EcoTrack — AI-powered Carbon Tracker">
   <meta property="og:description" content="Understand, track, and reduce your carbon footprint through simple actions and personalized insights.">
   <meta property="og:type" content="website">
 
@@ -22,10 +22,58 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- canvas-confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.435.0/dist/umd/lucide.min.js"></script>
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
+  <!-- ── Landing Page Overlay ──────────────────────── -->
+  <div class="landing-page" id="landing-page">
+    <div class="landing-bg">
+      <div class="floating-icon leaf-1">🍃</div>
+      <div class="floating-icon leaf-2">🌿</div>
+      <div class="floating-icon drop-1">💧</div>
+      <div class="floating-icon sun-1">☀️</div>
+      <div class="floating-icon cloud-1">☁️</div>
+    </div>
+    
+    <div class="landing-content">
+      <div class="landing-logo">
+        <span class="landing-logo-icon">🌍</span>
+        <span class="landing-logo-text">EcoTrack</span>
+      </div>
+      <h1 class="landing-headline">
+        Know Your Impact.<br>
+        <span class="highlight-gradient">Reduce Your Footprint.</span>
+      </h1>
+      <p class="landing-subheading">AI-powered sustainability companion.</p>
+      
+      <div class="landing-earth-container">
+        <div class="landing-earth">
+          <div class="earth-grid"></div>
+        </div>
+      </div>
+
+      <div class="landing-buttons">
+        <button class="btn btn-primary btn-lg" id="btn-landing-calc">
+          <i data-lucide="calculator"></i> Calculate My Footprint
+        </button>
+        <button class="btn btn-outline btn-lg" id="btn-landing-dashboard">
+          <i data-lucide="layout-dashboard"></i> Explore Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="app" id="app">
 
     <!-- ── Header ──────────────────────────────────── -->
@@ -36,24 +84,24 @@
       </div>
       <nav class="header-nav" id="header-nav">
         <button class="nav-link active" data-tab="dashboard">
-          <span class="nav-link-icon">📊</span> Dashboard
+          <i data-lucide="layout-dashboard" class="nav-link-icon"></i> Dashboard
         </button>
         <button class="nav-link" data-tab="calculator">
-          <span class="nav-link-icon">🧮</span> Calculator
+          <i data-lucide="calculator" class="nav-link-icon"></i> Calculator
         </button>
         <button class="nav-link" data-tab="actions">
-          <span class="nav-link-icon">✅</span> Actions
+          <i data-lucide="check-square" class="nav-link-icon"></i> Actions
         </button>
         <button class="nav-link" data-tab="insights">
-          <span class="nav-link-icon">💡</span> Insights
+          <i data-lucide="sparkles" class="nav-link-icon"></i> Insights
         </button>
         <button class="nav-link" data-tab="profile">
-          <span class="nav-link-icon">👤</span> Profile
+          <i data-lucide="user" class="nav-link-icon"></i> Profile
         </button>
       </nav>
       <div class="header-actions">
         <div class="header-streak" id="header-streak" style="display:none">
-          <span class="streak-fire">🔥</span>
+          <span class="streak-fire"><i data-lucide="flame" style="width:16px;height:16px"></i></span>
           <span id="header-streak-value">0</span> day streak
         </div>
         <div class="header-points" id="header-points" style="display:none">
@@ -108,23 +156,23 @@
     <!-- ── Bottom Navigation ───────────────────────── -->
     <nav class="bottom-nav" id="bottom-nav">
       <button class="nav-item active" data-tab="dashboard" id="nav-dashboard">
-        <span class="nav-icon">📊</span>
+        <i data-lucide="layout-dashboard" class="nav-icon"></i>
         <span>Dashboard</span>
       </button>
       <button class="nav-item" data-tab="calculator" id="nav-calculator">
-        <span class="nav-icon">🧮</span>
+        <i data-lucide="calculator" class="nav-icon"></i>
         <span>Calculator</span>
       </button>
       <button class="nav-item" data-tab="actions" id="nav-actions">
-        <span class="nav-icon">✅</span>
+        <i data-lucide="check-square" class="nav-icon"></i>
         <span>Actions</span>
       </button>
       <button class="nav-item" data-tab="insights" id="nav-insights">
-        <span class="nav-icon">💡</span>
+        <i data-lucide="sparkles" class="nav-icon"></i>
         <span>Insights</span>
       </button>
       <button class="nav-item" data-tab="profile" id="nav-profile">
-        <span class="nav-icon">👤</span>
+        <i data-lucide="user" class="nav-icon"></i>
         <span>Profile</span>
       </button>
     </nav>
