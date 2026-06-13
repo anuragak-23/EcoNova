@@ -95,29 +95,11 @@
           Track, understand, and reduce your carbon footprint with AI-powered sustainability insights.
         </p>
         
-        <!-- Interactive Preview Widgets -->
+        <!-- Interactive Preview Widgets (Compact Pills) -->
         <div class="auth-preview-widget">
-          <div class="preview-card-item">
-            <div class="preview-card-icon">🤖</div>
-            <div class="preview-card-text">
-              <strong>AI Climate Coach</strong>
-              <span>Personalized recommendations to lower emissions.</span>
-            </div>
-          </div>
-          <div class="preview-card-item">
-            <div class="preview-card-icon">📊</div>
-            <div class="preview-card-text">
-              <strong>Progress Analytics</strong>
-              <span>Watch your daily footprint shrink in real-time.</span>
-            </div>
-          </div>
-          <div class="preview-card-item">
-            <div class="preview-card-icon">🏆</div>
-            <div class="preview-card-text">
-              <strong>Achievements</strong>
-              <span>Unlock ranks and collect eco-badges.</span>
-            </div>
-          </div>
+          <span class="preview-pill"><span class="pill-icon">🤖</span> AI Climate Coach</span>
+          <span class="preview-pill"><span class="pill-icon">📊</span> Progress Analytics</span>
+          <span class="preview-pill"><span class="pill-icon">🏆</span> Achievements</span>
         </div>
       </div>
     </div>
@@ -142,14 +124,14 @@
             <input type="email" id="signin-email" class="form-select" placeholder="name@example.com" required>
           </div>
           <div class="form-group">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-2)">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px">
               <label class="form-label" for="signin-password" style="margin-bottom:0">Password</label>
               <a href="#" class="auth-link-sm" id="btn-forgot-password">Forgot Password?</a>
             </div>
             <input type="password" id="signin-password" class="form-select" placeholder="Enter password" required>
           </div>
-          <div class="form-group" style="display:flex; align-items:center; gap:var(--space-2)">
-            <input type="checkbox" id="signin-remember" checked style="width:16px; height:16px; accent-color:var(--primary); cursor:pointer;">
+          <div class="form-group form-checkbox-group">
+            <input type="checkbox" id="signin-remember" checked style="width:14px; height:14px; accent-color:var(--primary); cursor:pointer;">
             <label class="form-label" for="signin-remember" style="margin-bottom:0; cursor:pointer; font-weight:500;">Remember Me</label>
           </div>
           <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-signin-submit">
@@ -159,53 +141,52 @@
 
         <!-- Sign Up Form -->
         <form class="auth-form" id="signup-form">
-          <div class="form-group">
-            <label class="form-label" for="signup-name">Full Name</label>
-            <input type="text" id="signup-name" class="form-select" placeholder="What should we call you?" required>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="signup-name">Full Name</label>
+              <input type="text" id="signup-name" class="form-select" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-country">Country</label>
+              <select class="form-select" id="signup-country">
+                <option value="IN">🇮🇳 India</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="AU">🇦🇺 Australia</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label" for="signup-email">Email Address</label>
             <input type="email" id="signup-email" class="form-select" placeholder="name@example.com" required>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="signup-password">Password</label>
-            <input type="password" id="signup-password" class="form-select" placeholder="At least 6 characters" required minlength="6">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="signup-password">Password</label>
+              <input type="password" id="signup-password" class="form-select" placeholder="At least 6 chars" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signup-confirm-password">Confirm Password</label>
+              <input type="password" id="signup-confirm-password" class="form-select" placeholder="Repeat password" required>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="signup-confirm-password">Confirm Password</label>
-            <input type="password" id="signup-confirm-password" class="form-select" placeholder="Repeat password" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="signup-country">Country (Optional)</label>
-            <select class="form-select" id="signup-country">
-              <option value="IN">🇮🇳 India</option>
-              <option value="US">🇺🇸 United States</option>
-              <option value="GB">🇬🇧 United Kingdom</option>
-              <option value="DE">🇩🇪 Germany</option>
-              <option value="FR">🇫🇷 France</option>
-              <option value="CA">🇨🇦 Canada</option>
-              <option value="AU">🇦🇺 Australia</option>
-            </select>
-          </div>
-          <div class="form-group" style="display:flex; align-items:flex-start; gap:var(--space-2)">
-            <input type="checkbox" id="signup-agree" style="width:16px; height:16px; margin-top:2px; accent-color:var(--primary); cursor:pointer;" required>
-            <label class="form-label" for="signup-agree" style="margin-bottom:0; cursor:pointer; font-weight:500; font-size:var(--text-xs); line-height:1.4">
-              I agree to the <a href="#" class="auth-link-sm" style="font-size:inherit">Terms of Service</a> and <a href="#" class="auth-link-sm" style="font-size:inherit">Privacy Policy</a>
+          <div class="form-group form-checkbox-group">
+            <input type="checkbox" id="signup-agree" style="width:14px; height:14px; accent-color:var(--primary); cursor:pointer;" required>
+            <label class="form-label" for="signup-agree" style="margin-bottom:0; cursor:pointer; font-weight:500; font-size:var(--text-xs); line-height:1.2">
+              I agree to the <a href="#" class="auth-link-sm" style="font-size:inherit">Terms</a> & <a href="#" class="auth-link-sm" style="font-size:inherit">Privacy</a>
             </label>
           </div>
           <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-signup-submit">
-            Create EcoNova Account
+            Create Account
           </button>
         </form>
 
-        <!-- Social login divider -->
-        <div class="auth-divider">
-          <span>or</span>
-        </div>
-
         <!-- Google button -->
-        <button class="btn btn-secondary btn-lg btn-block" id="btn-google-auth" style="gap:var(--space-3)">
-          <svg style="width:18px; height:18px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <button class="btn btn-secondary btn-lg btn-block" id="btn-google-auth" style="margin-top:10px; gap:var(--space-2)">
+          <svg style="width:16px; height:16px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
