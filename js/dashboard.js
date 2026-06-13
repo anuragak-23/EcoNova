@@ -3,8 +3,9 @@
 // Carbon Footprint Awareness Platform
 // ============================================================
 
-import { DAILY_TIPS, BENCHMARKS, CATEGORY_COLORS, LEVELS } from './data.js';
-import { getProfile, getStats, getWeeklyData, calculateStreak } from './storage.js';
+import { DAILY_TIPS, BENCHMARKS, CATEGORY_COLORS } from './data.js';
+import { getProfile, getStats, getWeeklyData } from './storage.js';
+import { getAvatarInfo, getLevel, getLevelProgress } from './gamification.js';
 
 let scoreChart = null;
 let breakdownChart = null;
@@ -31,6 +32,9 @@ function renderDashboard() {
   const hasFootprint = profile.footprint && profile.footprint.total > 0;
 
   container.innerHTML = `
+    <!-- Welcome Greeting Header -->
+    ${hasFootprint ? renderWelcomeHeader(profile) : ''}
+
     <!-- Daily Tip -->
     <div class="daily-tip">
       <div class="daily-tip-icon">${tip.icon}</div>
@@ -49,8 +53,33 @@ function renderDashboard() {
       renderBreakdownChart(profile.footprint);
       renderTrendChart();
       animateStatCounters();
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
     }, 150);
+  } else {
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
+}
+
+function renderWelcomeHeader(profile) {
+  const hour = new Date().getHours();
+  let greeting = 'Good Evening';
+  if (hour < 12) greeting = 'Good Morning';
+  else if (hour < 17) greeting = 'Good Afternoon';
+
+  return `
+    <div class="welcome-card mb-6 card" style="background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg)); border: 1px solid var(--primary-glow)">
+      <h2 style="font-size:var(--text-2xl); font-weight:800; margin-bottom:2px">
+        ${greeting}, <span class="highlight-gradient" style="font-weight:800">${profile.name || 'Eco Warrior'}</span>! 🌱
+      </h2>
+      <p style="color:var(--text-secondary); font-size:var(--text-sm)">
+        Welcome back to your sustainability dashboard. Here is your environmental footprint summary.
+      </p>
+    </div>
+  `;
 }
 
 function renderEmptyState() {
@@ -62,7 +91,7 @@ function renderEmptyState() {
         Start by calculating your carbon footprint. It only takes 2 minutes and helps us personalize your experience.
       </p>
       <button class="btn btn-primary btn-lg" id="btn-start-calc">
-        🧮 Calculate My Footprint
+        <i data-lucide="calculator"></i> Calculate My Footprint
       </button>
     </div>
   `;
@@ -72,12 +101,17 @@ function renderFootprintDashboard(profile, stats) {
   const fp = profile.footprint;
   const level = getLevel(stats.totalPoints);
   const levelProgress = getLevelProgress(stats.totalPoints);
+  const avatarInfo = getAvatarInfo(fp.total);
 
   return `
-    <!-- Score + Stats Row -->
+    <!-- Score + Avatar Row -->
     <div class="dashboard-grid">
-      <!-- Carbon Score -->
+      
+      <!-- Carbon Score Ring -->
       <div class="card card-glass">
+        <div class="card-header" style="margin-bottom:0; padding-bottom:0;">
+          <h3 class="card-title"><i data-lucide="activity"></i> Carbon Score</h3>
+        </div>
         <div class="score-section">
           <div class="score-ring-container">
             <canvas id="score-ring-canvas"></canvas>
@@ -86,8 +120,8 @@ function renderFootprintDashboard(profile, stats) {
               <div class="score-ring-unit">tonnes CO₂/yr</div>
             </div>
           </div>
-          <div class="score-badge">
-            ${level.icon} ${level.title}
+          <div class="score-badge" style="border-color:${avatarInfo.color}; color:${avatarInfo.color}; background:${avatarInfo.color}15">
+            Level ${level.level}: ${level.title}
           </div>
           <p class="score-ring-label">
             ${fp.total <= BENCHMARKS.paris_target.value ? '🌟 Below Paris Agreement Target!' :
@@ -98,46 +132,59 @@ function renderFootprintDashboard(profile, stats) {
         </div>
       </div>
 
-      <!-- Quick Stats -->
-      <div class="flex flex-col gap-4">
-        <div class="stats-grid" style="margin-bottom:0">
-          <div class="stat-card primary">
-            <div class="stat-card-icon">🌿</div>
-            <div class="stat-card-value" data-counter="${stats.totalCO2Saved}">0</div>
-            <div class="stat-card-label">kg CO₂ Saved</div>
-          </div>
-          <div class="stat-card transport">
-            <div class="stat-card-icon">✅</div>
-            <div class="stat-card-value" data-counter="${stats.totalActions}">0</div>
-            <div class="stat-card-label">Actions Taken</div>
-          </div>
-          <div class="stat-card energy">
-            <div class="stat-card-icon">🔥</div>
-            <div class="stat-card-value" data-counter="${stats.streak}">0</div>
-            <div class="stat-card-label">Day Streak</div>
-          </div>
-          <div class="stat-card food">
-            <div class="stat-card-icon">💎</div>
-            <div class="stat-card-value" data-counter="${stats.totalPoints}">0</div>
-            <div class="stat-card-label">Eco Points</div>
-          </div>
+      <!-- Evolving Carbon Avatar Card -->
+      <div class="card avatar-card">
+        <div class="avatar-img-wrapper" style="border-color: ${avatarInfo.color}; box-shadow: 0 0 15px ${avatarInfo.color}25">
+          ${avatarInfo.avatar}
         </div>
-
-        <!-- Level Progress -->
-        <div class="card">
-          <div class="level-card" style="padding: var(--space-4)">
-            <div class="level-icon" style="width:56px;height:56px;font-size:1.8rem">${level.icon}</div>
-            <div class="level-info">
-              <div class="level-title" style="font-size:var(--text-base)">Level ${level.level}: ${level.title}</div>
-              <div class="level-progress-bar">
-                <div class="level-progress-fill" style="width:${levelProgress.progress}%"></div>
-              </div>
-              <div class="level-progress-text">
-                <span>${stats.totalPoints} pts</span>
-                <span>${levelProgress.next ? levelProgress.next.minPoints + ' pts' : 'MAX'}</span>
-              </div>
+        <div class="avatar-info">
+          <div class="avatar-rank-label">Current Carbon Rank</div>
+          <div class="avatar-rank-value" style="color: ${avatarInfo.color}">${avatarInfo.rank}</div>
+          <div class="avatar-desc">${avatarInfo.description}</div>
+          
+          <div class="avatar-progress-container">
+            <div class="avatar-progress-bar">
+              <div class="avatar-progress-fill" style="width: ${avatarInfo.progress}%; background: ${avatarInfo.color}"></div>
+            </div>
+            <div class="avatar-progress-text">
+              <span>Next: ${avatarInfo.nextRank}</span>
+              <span>${avatarInfo.progress}%</span>
             </div>
           </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Cumulative Environmental Impact Summary Card -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h3 class="card-title"><i data-lucide="leaf"></i> Cumulative Environmental Impact</h3>
+      </div>
+      <p class="card-subtitle" style="margin-bottom:var(--space-5)">
+        A live summary of all greenhouse gas emissions saved and environmental offsets achieved.
+      </p>
+      
+      <div class="stats-grid" style="margin-bottom:0">
+        <div class="stat-card primary">
+          <div class="stat-card-icon">🌿</div>
+          <div class="stat-card-value" data-counter="${stats.totalCO2Saved}">0</div>
+          <div class="stat-card-label">kg CO₂ Saved</div>
+        </div>
+        <div class="stat-card food">
+          <div class="stat-card-icon">🌳</div>
+          <div class="stat-card-value" data-counter="${(stats.totalCO2Saved / 22).toFixed(1)}">0</div>
+          <div class="stat-card-label">Trees Saved (yearly equiv)</div>
+        </div>
+        <div class="stat-card transport">
+          <div class="stat-card-icon">🚗</div>
+          <div class="stat-card-value" data-counter="${(stats.totalCO2Saved / 0.21).toFixed(0)}">0</div>
+          <div class="stat-card-label">km Driving Avoided</div>
+        </div>
+        <div class="stat-card energy">
+          <div class="stat-card-icon">🔌</div>
+          <div class="stat-card-value" data-counter="${(stats.totalCO2Saved / 0.008).toFixed(0)}">0</div>
+          <div class="stat-card-label">Phone Charges Saved</div>
         </div>
       </div>
     </div>
@@ -147,7 +194,7 @@ function renderFootprintDashboard(profile, stats) {
       <!-- Category Breakdown -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">📊 Emission Breakdown</h3>
+          <h3 class="card-title"><i data-lucide="bar-chart-3"></i> Emission Breakdown</h3>
         </div>
         <div class="chart-container" style="height:250px">
           <canvas id="breakdown-chart"></canvas>
@@ -157,7 +204,7 @@ function renderFootprintDashboard(profile, stats) {
       <!-- Weekly Trend -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">📈 Weekly CO₂ Saved</h3>
+          <h3 class="card-title"><i data-lucide="line-chart"></i> Weekly CO₂ Saved</h3>
         </div>
         <div class="chart-container" style="height:250px">
           <canvas id="trend-chart"></canvas>
@@ -167,7 +214,9 @@ function renderFootprintDashboard(profile, stats) {
 
     <!-- Recalculate -->
     <div class="text-center mt-4">
-      <button class="btn btn-outline" id="btn-recalc">🔄 Recalculate Footprint</button>
+      <button class="btn btn-outline" id="btn-recalc">
+        <i data-lucide="refresh-cw"></i> Recalculate Footprint
+      </button>
     </div>
   `;
 }
@@ -193,7 +242,7 @@ function renderScoreRing(footprint) {
     data: {
       datasets: [{
         data: [footprint.total, remaining],
-        backgroundColor: [color, 'rgba(148,163,184,0.12)'],
+        backgroundColor: [color, 'rgba(148,163,184,0.1)'],
         borderWidth: 0,
         hoverOffset: 0,
       }]
@@ -201,7 +250,7 @@ function renderScoreRing(footprint) {
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      cutout: '80%',
+      cutout: '82%',
       rotation: -90,
       circumference: 360,
       plugins: {
@@ -225,21 +274,34 @@ function renderBreakdownChart(footprint) {
   if (breakdownChart) { breakdownChart.destroy(); breakdownChart = null; }
 
   const ctx = canvas.getContext('2d');
+
+  // Create visual gradient bars
+  const gradTransport = ctx.createLinearGradient(0, 0, 350, 0);
+  gradTransport.addColorStop(0, '#3B82F6');
+  gradTransport.addColorStop(1, '#1D4ED8');
+
+  const gradEnergy = ctx.createLinearGradient(0, 0, 350, 0);
+  gradEnergy.addColorStop(0, '#F59E0B');
+  gradEnergy.addColorStop(1, '#D97706');
+
+  const gradFood = ctx.createLinearGradient(0, 0, 350, 0);
+  gradFood.addColorStop(0, '#10B981');
+  gradFood.addColorStop(1, '#059669');
+
+  const gradLifestyle = ctx.createLinearGradient(0, 0, 350, 0);
+  gradLifestyle.addColorStop(0, '#8B5CF6');
+  gradLifestyle.addColorStop(1, '#7C3AED');
+
   breakdownChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: ['Transport', 'Energy', 'Food', 'Lifestyle'],
       datasets: [{
         data: [footprint.transport, footprint.energy, footprint.food, footprint.lifestyle],
-        backgroundColor: [
-          CATEGORY_COLORS.transport.primary,
-          CATEGORY_COLORS.energy.primary,
-          CATEGORY_COLORS.food.primary,
-          CATEGORY_COLORS.lifestyle.primary,
-        ],
+        backgroundColor: [gradTransport, gradEnergy, gradFood, gradLifestyle],
         borderRadius: 8,
         borderSkipped: false,
-        barThickness: 36,
+        barThickness: 28,
       }]
     },
     options: {
@@ -249,11 +311,13 @@ function renderBreakdownChart(footprint) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(15,23,42,0.9)',
-          titleFont: { family: "'Inter', sans-serif", weight: '700' },
-          bodyFont: { family: "'Inter', sans-serif" },
+          backgroundColor: 'rgba(15,23,42,0.95)',
+          titleFont: { family: "'Inter', sans-serif", weight: '700', size: 13 },
+          bodyFont: { family: "'Inter', sans-serif", size: 12 },
           padding: 12,
-          cornerRadius: 8,
+          cornerRadius: 10,
+          borderColor: '#10B981',
+          borderWidth: 1,
           callbacks: {
             label: (ctx) => ` ${ctx.parsed.x} tonnes CO₂/year`
           }
@@ -263,7 +327,7 @@ function renderBreakdownChart(footprint) {
         x: {
           grid: { display: false },
           ticks: {
-            font: { family: "'Inter', sans-serif", size: 12 },
+            font: { family: "'Inter', sans-serif", size: 11 },
             color: '#94A3B8',
             callback: (val) => val + 't'
           },
@@ -272,7 +336,7 @@ function renderBreakdownChart(footprint) {
         y: {
           grid: { display: false },
           ticks: {
-            font: { family: "'Inter', sans-serif", size: 13, weight: '600' },
+            font: { family: "'Outfit', sans-serif", size: 13, weight: '600' },
             color: '#475569',
           },
           border: { display: false },
@@ -293,13 +357,12 @@ function renderTrendChart() {
   if (trendChart) { trendChart.destroy(); trendChart = null; }
 
   const weeklyData = getWeeklyData(4);
-
   const ctx = canvas.getContext('2d');
 
-  // Gradient fill
+  // Gradient fill under trend line
   const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-  gradient.addColorStop(0, 'rgba(16,185,129,0.3)');
-  gradient.addColorStop(1, 'rgba(16,185,129,0.02)');
+  gradient.addColorStop(0, 'rgba(16,185,129,0.25)');
+  gradient.addColorStop(1, 'rgba(16,185,129,0.01)');
 
   trendChart = new Chart(ctx, {
     type: 'line',
@@ -312,7 +375,7 @@ function renderTrendChart() {
         backgroundColor: gradient,
         borderWidth: 3,
         fill: true,
-        tension: 0.4,
+        tension: 0.45,
         pointBackgroundColor: '#10B981',
         pointBorderColor: '#FFFFFF',
         pointBorderWidth: 2,
@@ -326,11 +389,13 @@ function renderTrendChart() {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(15,23,42,0.9)',
-          titleFont: { family: "'Inter', sans-serif", weight: '700' },
-          bodyFont: { family: "'Inter', sans-serif" },
+          backgroundColor: 'rgba(15,23,42,0.95)',
+          titleFont: { family: "'Inter', sans-serif", weight: '700', size: 13 },
+          bodyFont: { family: "'Inter', sans-serif", size: 12 },
           padding: 12,
-          cornerRadius: 8,
+          cornerRadius: 10,
+          borderColor: '#10B981',
+          borderWidth: 1,
           callbacks: {
             label: (ctx) => ` ${ctx.parsed.y} kg CO₂ saved`
           }
@@ -340,15 +405,15 @@ function renderTrendChart() {
         x: {
           grid: { display: false },
           ticks: {
-            font: { family: "'Inter', sans-serif", size: 12 },
+            font: { family: "'Inter', sans-serif", size: 11 },
             color: '#94A3B8',
           },
           border: { display: false },
         },
         y: {
-          grid: { color: 'rgba(148,163,184,0.1)' },
+          grid: { color: 'rgba(148,163,184,0.06)' },
           ticks: {
-            font: { family: "'Inter', sans-serif", size: 12 },
+            font: { family: "'Inter', sans-serif", size: 11 },
             color: '#94A3B8',
             callback: (val) => val + ' kg'
           },
@@ -388,24 +453,4 @@ function getDailyTip() {
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
   return DAILY_TIPS[dayOfYear % DAILY_TIPS.length];
-}
-
-function getLevel(points) {
-  let current = LEVELS[0];
-  for (const lvl of LEVELS) {
-    if (points >= lvl.minPoints) current = lvl;
-  }
-  return current;
-}
-
-function getLevelProgress(points) {
-  const current = getLevel(points);
-  const currentIdx = LEVELS.findIndex(l => l.level === current.level);
-  const next = LEVELS[currentIdx + 1] || null;
-
-  if (!next) return { current, next: null, progress: 100 };
-
-  const range = next.minPoints - current.minPoints;
-  const progress = Math.min(((points - current.minPoints) / range) * 100, 100);
-  return { current, next, progress: Math.round(progress) };
 }
