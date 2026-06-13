@@ -1,4 +1,4 @@
-# 🌍 Carbon Footprint Awareness Platform
+# 🌍 EcoNova — AI Sustainability Platform
 
 > **Challenge 3** — Design a solution that helps individuals understand, track, and reduce their carbon footprint through simple actions and personalized insights.
 
@@ -423,4 +423,4 @@ Total Footprint (tonnes CO₂e/year) =
 
 **Built with 💚 for a greener planet**
 
-*© 2026 Carbon Footprint Awareness Platform*
+*© 2026 EcoNova*

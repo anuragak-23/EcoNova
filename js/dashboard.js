@@ -86,7 +86,7 @@ function renderEmptyState() {
   return `
     <div class="empty-state">
       <div class="empty-state-icon">🌍</div>
-      <h3 class="empty-state-title">Welcome to EcoTrack!</h3>
+      <h3 class="empty-state-title">Welcome to EcoNova!</h3>
       <p class="empty-state-text">
         Start by calculating your carbon footprint. It only takes 2 minutes and helps us personalize your experience.
       </p>

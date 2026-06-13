@@ -197,7 +197,7 @@ function generateRuleBasedAdvice(footprint, highestCategory) {
 
 async function generateGeminiAdvice(apiKey, footprint, highestCategory) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-  const prompt = `You are EcoTrack's AI Sustainability Coach. Analyze this user's carbon footprint data:
+  const prompt = `You are EcoNova's AI Sustainability Coach. Analyze this user's carbon footprint data:
 - Transport emissions: ${footprint.transport} tonnes CO₂/year
 - Energy emissions: ${footprint.energy} tonnes CO₂/year
 - Food emissions: ${footprint.food} tonnes CO₂/year

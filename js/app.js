@@ -227,7 +227,7 @@ function showOnboarding() {
   overlay.innerHTML = `
     <div class="onboarding-card">
       <div class="onboarding-icon">🌍</div>
-      <h2 class="onboarding-title">Welcome to EcoTrack!</h2>
+      <h2 class="onboarding-title">Welcome to EcoNova!</h2>
       <p class="onboarding-text">
         Your personal carbon footprint companion. Track your emissions, log eco-actions, earn badges, and make a real difference for our planet.
       </p>
@@ -371,7 +371,7 @@ function renderProfile() {
           <div style="position:absolute; width:120px; height:120px; background:rgba(59,130,246,0.12); border-radius:50%; bottom:-30px; left:-35px; filter:blur(25px); pointer-events:none;"></div>
           
           <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #34D399; font-weight: 700; margin-bottom: 0.25rem;">Official Scorecard</div>
-          <div style="font-size: 2.25rem; font-weight: 700; font-family:'Space Grotesk',sans-serif; margin-bottom: 1.25rem; background: linear-gradient(135deg, #10B981, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EcoTrack</div>
+          <div style="font-size: 2.25rem; font-weight: 700; font-family:'Space Grotesk',sans-serif; margin-bottom: 1.25rem; background: linear-gradient(135deg, #10B981, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EcoNova</div>
           
           <div style="font-size: 2.8rem; margin-bottom: 0.5rem; animation: floatAvatar 3s ease-in-out infinite alternate;">${avatarInfo.avatar}</div>
           <div style="font-size: 1.25rem; font-weight: 700; font-family:'Space Grotesk',sans-serif;">${profile.name || 'Eco Warrior'}</div>
@@ -385,7 +385,7 @@ function renderProfile() {
             </div>
           </div>
           
-          <div style="font-size: 0.75rem; color: #64748B;">EcoTrack: AI-powered Carbon Tracking Companion</div>
+          <div style="font-size: 0.75rem; color: #64748B;">EcoNova: Smarter Choices for a Greener Future</div>
         </div>
       </div>
       
@@ -588,7 +588,7 @@ function renderProfile() {
         scale: 2 // Save as high-res PNG image
       }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `${profile.name || 'Eco-Warrior'}-ecotrack-scorecard.png`;
+        link.download = `${profile.name || 'Eco-Warrior'}-econova-scorecard.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
@@ -599,9 +599,9 @@ function renderProfile() {
 
   // Bind Share Impact button
   document.getElementById('btn-share-card')?.addEventListener('click', () => {
-    const shareText = `I just calculated my carbon footprint on EcoTrack! My score is ${profile.footprint?.total || 0} tonnes CO₂/year. Check yours and let's reduce our impact together!`;
+    const shareText = `I just calculated my carbon footprint on EcoNova! My score is ${profile.footprint?.total || 0} tonnes CO₂/year. Check yours and let's reduce our impact together!`;
     const shareData = {
-      title: 'EcoTrack Carbon Scorecard',
+      title: 'EcoNova Carbon Scorecard',
       text: shareText,
       url: window.location.origin + window.location.pathname
     };
