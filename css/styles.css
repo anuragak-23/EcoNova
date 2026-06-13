@@ -2012,7 +2012,7 @@ input[type="range"]::-moz-range-thumb {
 /* Landing Header / Navbar */
 .landing-header {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1600px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2085,8 +2085,8 @@ input[type="range"]::-moz-range-thumb {
 /* Core Landing Sections */
 .landing-section {
   width: 100%;
-  max-width: 1200px;
-  padding: var(--space-16) var(--space-6);
+  max-width: 1600px;
+  padding: var(--space-12) var(--space-6);
   position: relative;
   box-sizing: border-box;
 }
@@ -2097,8 +2097,8 @@ input[type="range"]::-moz-range-thumb {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-top: calc(var(--space-16) * 1.5);
-  padding-bottom: var(--space-16);
+  padding-top: calc(var(--space-12) * 1.5);
+  padding-bottom: var(--space-12);
   z-index: 1;
 }
 
@@ -2228,37 +2228,39 @@ input[type="range"]::-moz-range-thumb {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   background: rgba(255, 255, 255, 0.01);
-  padding: var(--space-8) var(--space-6);
+  padding: var(--space-8) 0;
+  width: 100%;
+  max-width: none !important;
 }
 
 .metrics-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-8);
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .metrics-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .metrics-container {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  box-sizing: border-box;
 }
 
 .metric-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--space-2) 0;
+}
+
+.metric-card:last-child {
+  border-right: none;
 }
 
 .metric-number {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.03em;
@@ -2271,48 +2273,53 @@ input[type="range"]::-moz-range-thumb {
 .metric-label {
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: #64748b;
   font-weight: 600;
 }
 
-/* Tech Stack Section */
-.tech-section {
-  padding: var(--space-10) var(--space-6);
+@media (max-width: 768px) {
+  .metrics-container {
+    flex-wrap: wrap;
+  }
+  .metric-card {
+    flex: 1 1 50%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: var(--space-4) 0;
+  }
+  .metric-card:nth-child(3), .metric-card:nth-child(4) {
+    border-bottom: none;
+  }
+  .metric-card:nth-child(odd) {
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
-.tech-badges-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-4) var(--space-8);
-}
-
-.tech-badge {
-  font-family: var(--font-heading);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: #475569;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
-  transition: all var(--transition-base);
-}
-
-.tech-badge:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+@media (max-width: 480px) {
+  .metrics-container {
+    flex-direction: column;
+  }
+  .metric-card {
+    flex: 1 1 100%;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: var(--space-4) 0;
+  }
+  .metric-card:last-child {
+    border-bottom: none !important;
+  }
 }
 
 /* Sustainability Pipeline Section */
 .pipeline-flow-container {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-6);
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
   position: relative;
-  margin-top: var(--space-8);
+  margin-top: var(--space-10);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 991px) {
@@ -2324,22 +2331,22 @@ input[type="range"]::-moz-range-thumb {
 
 .pipeline-connecting-line {
   position: absolute;
-  top: 24px;
-  left: 10%;
-  right: 10%;
-  height: 2px;
+  top: 36px;
+  left: 12%;
+  right: 12%;
+  height: 3px;
   background: linear-gradient(90deg, #10B981, #06B6D4);
-  opacity: 0.15;
+  opacity: 0.25;
   z-index: 0;
 }
 
 @media (max-width: 991px) {
   .pipeline-connecting-line {
-    top: 10%;
-    bottom: 10%;
-    left: 24px;
-    width: 2px;
-    height: 80%;
+    top: 5%;
+    bottom: 5%;
+    left: 36px;
+    width: 3px;
+    height: 90%;
   }
 }
 
@@ -2367,15 +2374,15 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .pipeline-step .step-icon {
-  width: 50px;
-  height: 50px;
+  width: 72px;
+  height: 72px;
   border-radius: var(--radius-full);
   background: #0f172a;
   border: 2px solid rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin-bottom: var(--space-4);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: all var(--transition-base);
@@ -2388,7 +2395,7 @@ input[type="range"]::-moz-range-thumb {
 
 .pipeline-step .step-title {
   font-family: var(--font-heading);
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: #ffffff;
   margin-bottom: var(--space-2);
@@ -2397,7 +2404,7 @@ input[type="range"]::-moz-range-thumb {
 .pipeline-step .step-desc {
   font-size: var(--text-xs);
   color: #64748b;
-  max-width: 180px;
+  max-width: 220px;
   line-height: 1.4;
 }
 
@@ -2961,7 +2968,7 @@ input[type="range"]::-moz-range-thumb {
 /* Footer Section */
 .landing-footer {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1600px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding: var(--space-8) var(--space-6);
   display: flex;
