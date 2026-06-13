@@ -37,41 +37,264 @@
 <body>
 
   <!-- ── Landing Page Overlay ──────────────────────── -->
+  <!-- ── Landing Page (Premium SaaS Layout) ───────── -->
   <div class="landing-page" id="landing-page">
-    <div class="landing-bg">
-      <div class="floating-icon leaf-1">🍃</div>
-      <div class="floating-icon leaf-2">🌿</div>
-      <div class="floating-icon drop-1">💧</div>
-      <div class="floating-icon sun-1">☀️</div>
-      <div class="floating-icon cloud-1">☁️</div>
-    </div>
-    
-    <div class="landing-content">
-      <div class="landing-logo">
-        <span class="landing-logo-icon">🌍</span>
-        <span class="landing-logo-text">EcoNova</span>
+    <!-- Landing Header / Navbar -->
+    <header class="landing-header">
+      <div class="landing-nav-logo">
+        <span class="logo-emoji">🌍</span> EcoNova
       </div>
-      <h1 class="landing-headline">
-        Know Your Impact.<br>
-        <span class="highlight-gradient">Reduce Your Footprint.</span>
+      <nav class="landing-nav-links">
+        <a href="#pipeline">Pipeline</a>
+        <a href="#preview">Preview</a>
+        <a href="#features">Features</a>
+        <a href="#why-econova">Why EcoNova</a>
+      </nav>
+      <div class="landing-nav-actions">
+        <button class="btn btn-outline btn-sm" id="btn-landing-nav-signin">Sign In</button>
+        <button class="btn btn-primary btn-sm btn-landing-cta" id="btn-landing-nav-launch">Launch EcoNova</button>
+      </div>
+    </header>
+
+    <!-- Section 1: Hero -->
+    <section class="landing-section hero-section">
+      <div class="hero-badge">
+        <span class="badge-tag">🌱</span> Next Generation Sustainability Intelligence
+      </div>
+      <h1 class="hero-title">
+        Enterprise Intelligence for<br>
+        <span class="text-gradient">Carbon Reduction</span>
       </h1>
-      <p class="landing-subheading">Smarter Choices for a Greener Future.</p>
+      <p class="hero-subtitle">
+        Transform your daily habits into measurable climate impact through AI-powered sustainability coaching.
+      </p>
+      <div class="hero-cta-buttons">
+        <button class="btn btn-primary btn-lg btn-landing-cta" id="btn-hero-launch">Launch EcoNova</button>
+        <button class="btn btn-outline btn-lg" id="btn-hero-explore">Explore Platform</button>
+      </div>
       
-      <div class="landing-earth-container">
-        <div class="landing-earth">
-          <div class="earth-grid"></div>
+      <!-- Background glowing ambient lights -->
+      <div class="hero-glow-radial hero-glow-1"></div>
+      <div class="hero-glow-radial hero-glow-2"></div>
+      
+      <div class="landing-particles" id="landing-particles"></div>
+    </section>
+
+    <!-- Section 2: Metrics Strip -->
+    <section class="landing-section metrics-section">
+      <div class="metrics-container">
+        <div class="metric-card">
+          <div class="metric-number" data-target="1000000">0</div>
+          <div class="metric-label">Activities Simulated</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number" data-target="95">0</div>
+          <div class="metric-label">Reduction Potential</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number" data-target="99">0</div>
+          <div class="metric-label">Insight Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number" data-target="10000">0</div>
+          <div class="metric-label">Actions Analyzed</div>
         </div>
       </div>
+    </section>
 
-      <div class="landing-buttons">
-        <button class="btn btn-primary btn-lg" id="btn-landing-calc">
-          <i data-lucide="calculator"></i> Calculate My Footprint
-        </button>
-        <button class="btn btn-outline btn-lg" id="btn-landing-dashboard">
-          <i data-lucide="layout-dashboard"></i> Explore Dashboard
-        </button>
+    <!-- Section 3: Technology Stack -->
+    <section class="landing-section tech-section">
+      <h3 class="section-micro-title">Powering Next-Gen Sustainability</h3>
+      <div class="tech-badges-container">
+        <span class="tech-badge">Gemini AI</span>
+        <span class="tech-badge">Chart.js</span>
+        <span class="tech-badge">Firebase</span>
+        <span class="tech-badge">Vercel</span>
+        <span class="tech-badge">JavaScript</span>
       </div>
-    </div>
+    </section>
+
+    <!-- Section 4: Sustainability Pipeline -->
+    <section class="landing-section pipeline-section" id="pipeline">
+      <h2 class="section-title text-center">The Sustainability Pipeline</h2>
+      <p class="section-subtitle text-center">Our structured, intelligence-driven workflow for systematic emission reduction.</p>
+      
+      <div class="pipeline-flow-container">
+        <!-- Connecting Line -->
+        <div class="pipeline-connecting-line"></div>
+        
+        <div class="pipeline-step">
+          <div class="step-icon">🔍</div>
+          <h4 class="step-title">Track</h4>
+          <p class="step-desc">Log daily activities instantly.</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">📊</div>
+          <h4 class="step-title">Analyze</h4>
+          <p class="step-desc">Calculate footprint across categories.</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">🔮</div>
+          <h4 class="step-title">Forecast</h4>
+          <p class="step-desc">Predict future impact.</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">🤖</div>
+          <h4 class="step-title">Recommend</h4>
+          <p class="step-desc">AI-powered sustainability strategies.</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">🌿</div>
+          <h4 class="step-title">Reduce</h4>
+          <p class="step-desc">Turn insights into measurable action.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Platform Preview -->
+    <section class="landing-section preview-section" id="preview">
+      <h2 class="section-title text-center">Experience EcoNova</h2>
+      <p class="section-subtitle text-center">A peek into our premium, data-dense sustainability interface.</p>
+      
+      <div class="preview-tabs-container">
+        <div class="preview-tabs">
+          <button class="preview-tab active" data-preview="dashboard">Dashboard</button>
+          <button class="preview-tab" data-preview="insights">Insights</button>
+          <button class="preview-tab" data-preview="coach">AI Coach</button>
+        </div>
+        
+        <div class="preview-viewport">
+          <!-- Realistic UI Mockup container -->
+          <div class="preview-window">
+            <div class="window-header">
+              <div class="window-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="window-title">econova.ai/app</div>
+            </div>
+            <div class="window-body" id="preview-window-body">
+              <!-- Mockup content loaded dynamically via app.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Features Grid -->
+    <section class="landing-section features-section" id="features">
+      <h2 class="section-title text-center">Platform Capabilities</h2>
+      <p class="section-subtitle text-center">Everything you need to analyze, understand, and reduce your footprint.</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h4 class="feature-title">AI Sustainability Coach</h4>
+          <p class="feature-desc">Receive real-time, personalized recommendations from Gemini based on your consumption data.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔮</div>
+          <h4 class="feature-title">Carbon Forecasting</h4>
+          <p class="feature-desc">Visualize your 10-year emissions projections comparing current habits against optimized ones.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎮</div>
+          <h4 class="feature-title">Action Simulator</h4>
+          <p class="feature-desc">Estimate CO₂ and points before you commit to daily logs to plan your environmental reductions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h4 class="feature-title">Advanced Analytics</h4>
+          <p class="feature-desc">Review your carbon profile across categories (Transport, Energy, Food, Lifestyle) in detailed charts.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h4 class="feature-title">Community Challenges</h4>
+          <p class="feature-desc">Participate in collective sustainability events with other green leaders and score extra points.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h4 class="feature-title">Achievements</h4>
+          <p class="feature-desc">Earn digital eco-badges for streaks, high carbon reductions, actions logged, and streak progression.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📉</div>
+          <h4 class="feature-title">Impact Tracking</h4>
+          <p class="feature-desc">Track exactly how many kilograms of CO₂ you have kept out of the atmosphere over time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👤</div>
+          <h4 class="feature-title">Climate Profile</h4>
+          <p class="feature-desc">Showcase your carbon level rank, download your official scorecard, and share your metrics with the world.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Why EcoNova -->
+    <section class="landing-section why-section" id="why-econova">
+      <div class="why-grid">
+        <div class="why-left">
+          <h2 class="section-title">Built for Real Climate Impact</h2>
+          <p class="section-subtitle" style="margin-bottom: var(--space-6);">Unlike standard flat calculators, EcoNova integrates advanced features to translate awareness into immediate carbon reduction.</p>
+          <ul class="why-list">
+            <li><span class="why-icon">✓</span> <strong>Personalized AI insights:</strong> Dynamic advice based on your lifestyle profile.</li>
+            <li><span class="why-icon">✓</span> <strong>Behavioral tracking:</strong> Daily action checks to construct permanent green habits.</li>
+            <li><span class="why-icon">✓</span> <strong>Scientific calculations:</strong> Formulations calibrated for precision assessments.</li>
+            <li><span class="why-icon">✓</span> <strong>Gamification elements:</strong> Level progress, eco-points, streaks, and achievements.</li>
+            <li><span class="why-icon">✓</span> <strong>Sustainability education:</strong> Weekly stats, daily facts, and impact equivalents.</li>
+          </ul>
+        </div>
+        
+        <div class="why-right">
+          <div class="why-progress-container">
+            <div class="progress-item">
+              <div class="progress-info">
+                <span>AI Accuracy</span>
+                <span>99%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 0%" data-width="99%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-info">
+                <span>User Engagement</span>
+                <span>87%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 0%" data-width="87%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-info">
+                <span>Footprint Reduction Potential</span>
+                <span>95%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 0%" data-width="95%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Final CTA -->
+    <section class="landing-section cta-section">
+      <div class="cta-card">
+        <h2 class="cta-title">Experience the Future of Sustainability</h2>
+        <p class="cta-subtitle">Track, understand, and reduce your carbon footprint with AI-powered intelligence.</p>
+        <button class="btn btn-primary btn-lg btn-landing-cta" id="btn-cta-launch">Launch EcoNova</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <div class="footer-logo">
+        <span class="logo-emoji">🌍</span> EcoNova
+      </div>
+      <div class="footer-tag">Smarter Choices for a Greener Future.</div>
+      <div class="footer-copy">&copy; 2026 EcoNova. Built with Antigravity AI.</div>
+    </footer>
   </div>
 
   <!-- ── Authentication Screen (Split Screen) ──────── -->

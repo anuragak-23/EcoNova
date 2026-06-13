@@ -115,7 +115,7 @@ export async function initAuth(onStateChanged) {
     if (sessionUser) {
       currentUser = JSON.parse(sessionUser);
     } else {
-      currentUser = null;
+      currentUser = loadGuestSession();
     }
   } catch (e) {
     currentUser = null;

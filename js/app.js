@@ -57,6 +57,7 @@ function initApp() {
 }
 
 function onAuthChange(user) {
+  const landingPage = document.getElementById('landing-page');
   const authPage = document.getElementById('auth-page');
   const appContainer = document.getElementById('app');
   const guestBanner = document.getElementById('guest-banner');
@@ -64,8 +65,9 @@ function onAuthChange(user) {
   const onboardingOverlay = document.getElementById('onboarding-overlay');
 
   if (!user) {
-    // Show auth overlay, hide app
-    if (authPage) authPage.style.display = 'flex';
+    // Show landing page, hide auth and app
+    if (landingPage) landingPage.style.display = 'block';
+    if (authPage) authPage.style.display = 'none';
     if (appContainer) appContainer.style.display = 'none';
     if (guestBanner) guestBanner.style.display = 'none';
     if (headerUserMenu) headerUserMenu.style.display = 'none';
@@ -74,6 +76,7 @@ function onAuthChange(user) {
   }
 
   // User is logged in!
+  if (landingPage) landingPage.style.display = 'none';
   if (authPage) authPage.style.display = 'none';
   if (appContainer) appContainer.style.display = 'block';
 
@@ -290,25 +293,224 @@ function bootApp() {
 }
 
 // ── Landing Page ────────────────────────────────────────────
+// ── Landing Page Mockup Data & Switcher ──────────────────────
+const MOCKUP_TEMPLATES = {
+  dashboard: `
+    <div class="mockup-dashboard">
+      <div class="mockup-header-stats">
+        <div class="m-stat">
+          <span class="m-val">480 kg</span>
+          <span class="m-lbl">CO₂ Saved</span>
+        </div>
+        <div class="m-stat">
+          <span class="m-val">5 Days</span>
+          <span class="m-lbl">Streak 🔥</span>
+        </div>
+        <div class="m-stat">
+          <span class="m-val">320 pts</span>
+          <span class="m-lbl">Eco Points 💎</span>
+        </div>
+      </div>
+      <div class="mockup-chart-row">
+        <div class="mockup-doughnut-col">
+          <div class="m-circle">
+            <span class="m-circle-val">2.8</span>
+            <span class="m-circle-lbl">tonnes/yr</span>
+          </div>
+        </div>
+        <div class="mockup-bars-col">
+          <div class="m-bar-item">
+            <span class="m-bar-lbl">Transport</span>
+            <div class="m-bar-track"><div class="m-bar-fill bg-blue" style="width: 45%"></div></div>
+          </div>
+          <div class="m-bar-item">
+            <span class="m-bar-lbl">Energy</span>
+            <div class="m-bar-track"><div class="m-bar-fill bg-orange" style="width: 30%"></div></div>
+          </div>
+          <div class="m-bar-item">
+            <span class="m-bar-lbl">Food</span>
+            <div class="m-bar-track"><div class="m-bar-fill bg-green" style="width: 15%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  insights: `
+    <div class="mockup-insights">
+      <div class="m-card-title">📉 10-Year Emission Projection</div>
+      <p class="m-card-desc">Comparison of your cumulative footprint between current consumption and optimized habits.</p>
+      <div class="mockup-projections-chart">
+        <div class="proj-y-axis">
+          <span>40t</span><span>20t</span><span>0t</span>
+        </div>
+        <div class="proj-bars-container">
+          <div class="proj-bar-group">
+            <div class="proj-bar current" style="height: 30%"></div>
+            <div class="proj-bar opt" style="height: 15%"></div>
+            <span class="proj-lbl">1 Yr</span>
+          </div>
+          <div class="proj-bar-group">
+            <div class="proj-bar current" style="height: 60%"></div>
+            <div class="proj-bar opt" style="height: 30%"></div>
+            <span class="proj-lbl">5 Yr</span>
+          </div>
+          <div class="proj-bar-group">
+            <div class="proj-bar current" style="height: 90%"></div>
+            <div class="proj-bar opt" style="height: 40%"></div>
+            <span class="proj-lbl">10 Yr</span>
+          </div>
+        </div>
+      </div>
+      <div class="proj-legend">
+        <span class="leg-item"><span class="leg-color bg-red"></span> Current Habits</span>
+        <span class="leg-item"><span class="leg-color bg-green"></span> Recommended Habits</span>
+      </div>
+    </div>
+  `,
+  coach: `
+    <div class="mockup-coach">
+      <div class="coach-chat-bubble">
+        <div class="bubble-meta">🤖 Eco AI Coach</div>
+        <p>Hi Eco Warrior! Here is your personalized action strategy based on your <strong>2.8 tonnes</strong> footprint:</p>
+        <ul class="coach-bullets">
+          <li>🚗 <strong>Transport (Largest Category):</strong> Shifting commuting mode to electric or WFH twice a week will save <strong>850 kg CO₂/yr</strong>.</li>
+          <li>⚡ <strong>Energy:</strong> Shifting AC temperature from 20°C to 24°C saves <strong>210 kg CO₂/yr</strong>.</li>
+          <li>🍔 <strong>Food:</strong> Introducing 3 plant-based days weekly saves <strong>340 kg CO₂/yr</strong>.</li>
+        </ul>
+        <div class="bubble-footer">Estimated Yearly CO₂ Reduction: <strong>1.4 tonnes (50%)</strong></div>
+      </div>
+    </div>
+  `
+};
+
+function renderMockup(type) {
+  const container = document.getElementById('preview-window-body');
+  if (container && MOCKUP_TEMPLATES[type]) {
+    container.innerHTML = MOCKUP_TEMPLATES[type];
+  }
+}
+
+// ── Landing Page Setup ──────────────────────────────────────
 function setupLandingPage() {
   const landing = document.getElementById('landing-page');
-  const calcBtn = document.getElementById('btn-landing-calc');
-  const dashBtn = document.getElementById('btn-landing-dashboard');
+  if (!landing) return;
 
-  if (landing) {
-    calcBtn?.addEventListener('click', () => {
-      landing.classList.add('fade-out');
-      setTimeout(() => landing.style.display = 'none', 800);
-      switchTab('calculator');
-      initCalculator();
-    });
+  // Render default tab mockup
+  renderMockup('dashboard');
 
-    dashBtn?.addEventListener('click', () => {
-      landing.classList.add('fade-out');
-      setTimeout(() => landing.style.display = 'none', 800);
-      switchTab('dashboard');
+  // Interactive mockup tabs switcher
+  const tabs = document.querySelectorAll('.preview-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderMockup(tab.dataset.preview);
     });
+  });
+
+  // Launch CTAs click listener
+  const launchButtons = document.querySelectorAll('.btn-landing-cta');
+  const authPage = document.getElementById('auth-page');
+  
+  launchButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      landing.style.display = 'none';
+      if (authPage) authPage.style.display = 'flex';
+      // Auto select the signup tab if they click Launch
+      document.getElementById('tab-signup-btn')?.click();
+    });
+  });
+
+  // Sign In nav button click listener
+  document.getElementById('btn-landing-nav-signin')?.addEventListener('click', () => {
+    landing.style.display = 'none';
+    if (authPage) authPage.style.display = 'flex';
+    document.getElementById('tab-signin-btn')?.click();
+  });
+
+  // Explore Platform button (Guest Mode bypass)
+  document.getElementById('btn-hero-explore')?.addEventListener('click', () => {
+    signInAsGuest();
+  });
+
+  // Inject floating hero particles
+  const particlesContainer = document.getElementById('landing-particles');
+  if (particlesContainer) {
+    particlesContainer.innerHTML = '';
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'hero-particle';
+      particle.style.cssText = `
+        position: absolute;
+        width: ${Math.random() * 5 + 2}px;
+        height: ${Math.random() * 5 + 2}px;
+        background: rgba(16, 185, 129, ${Math.random() * 0.25 + 0.1});
+        border-radius: 50%;
+        top: ${Math.random() * 100}%;
+        left: ${Math.random() * 100}%;
+        animation: floatParticle ${Math.random() * 10 + 6}s linear infinite;
+        animation-delay: -${Math.random() * 10}s;
+      `;
+      particlesContainer.appendChild(particle);
+    }
   }
+
+  // Scroll animated metrics counters
+  animateMetricsCounters();
+
+  // Scroll animated progress bars
+  animateProgressBars();
+}
+
+function animateMetricsCounters() {
+  const elements = document.querySelectorAll('.metric-number');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = parseInt(entry.target.dataset.target, 10);
+        let current = 0;
+        const duration = 1200; // 1.2 seconds
+        const stepTime = 30;
+        const totalSteps = duration / stepTime;
+        const increment = target / totalSteps;
+        
+        const interval = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            clearInterval(interval);
+            entry.target.textContent = formatMetric(target);
+          } else {
+            entry.target.textContent = formatMetric(Math.floor(current));
+          }
+        }, stepTime);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  elements.forEach(el => observer.observe(el));
+}
+
+function formatMetric(val) {
+  if (val >= 1000000) return `${(val / 1000000).toFixed(0)}M+`;
+  if (val >= 10000) return `${(val / 1000).toFixed(0)}k+`;
+  if (val === 95 || val === 99) return `${val}%`;
+  return val;
+}
+
+function animateProgressBars() {
+  const elements = document.querySelectorAll('.progress-bar-fill');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const widthVal = entry.target.dataset.width;
+        entry.target.style.width = widthVal;
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  elements.forEach(el => observer.observe(el));
 }
 
 // ── Navigation ──────────────────────────────────────────────
