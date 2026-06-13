@@ -5,6 +5,9 @@
 
 import { ECO_ACTIONS, IMPACT_EQUIVALENTS, CATEGORIES, BENCHMARKS } from './data.js';
 import { getProfile, getStats } from './storage.js';
+import { initAICoach } from './ai.js';
+
+let projectionChart = null;
 
 export function initInsights() {
   renderInsights();
@@ -27,10 +30,13 @@ function renderInsights() {
           Complete the carbon calculator first, and we'll generate personalized recommendations to help you reduce your footprint.
         </p>
         <button class="btn btn-primary btn-lg" onclick="document.querySelector('[data-tab=calculator]').click()">
-          🧮 Take the Calculator
+          <i data-lucide="calculator"></i> Take the Calculator
         </button>
       </div>
     `;
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
     return;
   }
 
@@ -39,16 +45,21 @@ function renderInsights() {
   const equivalents = calculateEquivalents(stats.totalCO2Saved);
 
   container.innerHTML = `
-    <h2 style="font-size:var(--text-2xl); margin-bottom:var(--space-2)">💡 Your Personalized Insights</h2>
+    <h2 style="font-size:var(--text-2xl); margin-bottom:var(--space-2)">
+      <i data-lucide="sparkles" style="width:24px;height:24px;color:var(--primary);vertical-align:middle;"></i> Your Personalized Insights
+    </h2>
     <p style="color:var(--text-secondary); margin-bottom:var(--space-6)">
       Based on your footprint of <strong>${profile.footprint.total} tonnes CO₂/year</strong>, here's how you can make the biggest impact.
     </p>
 
+    <!-- AI Sustainability Coach Section -->
+    <div id="ai-coach-container"></div>
+
     <!-- Impact Equivalents -->
     ${stats.totalCO2Saved > 0 ? `
-      <div class="card mb-6" style="background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg));">
+      <div class="card mb-6" style="background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg)); border:1px solid var(--primary-glow)">
         <div class="card-header">
-          <h3 class="card-title">🌟 Your Impact So Far</h3>
+          <h3 class="card-title"><i data-lucide="award"></i> Your Impact So Far</h3>
         </div>
         <p style="color:var(--text-secondary); margin-bottom:var(--space-4)">
           You've saved <strong style="color:var(--primary)">${stats.totalCO2Saved} kg CO₂</strong> through your actions!
@@ -68,22 +79,22 @@ function renderInsights() {
     <!-- Biggest Impact Actions -->
     <div class="card mb-6">
       <div class="card-header">
-        <h3 class="card-title">🎯 Biggest Impact Actions</h3>
+        <h3 class="card-title"><i data-lucide="target"></i> Biggest Impact Actions</h3>
       </div>
       <p class="card-subtitle" style="margin-bottom:var(--space-4)">
         Focus on these actions to reduce your <strong>${getHighestCategory(profile.footprint)}</strong> emissions — your highest category.
       </p>
       <div class="actions-grid" style="margin-bottom:0">
         ${topActions.map(action => `
-          <div class="insight-card" style="cursor:pointer" onclick="document.querySelector('[data-tab=actions]').click()">
-            <div class="insight-icon ${action.category}">${action.icon}</div>
-            <div class="insight-body">
-              <div class="insight-title">${action.label}</div>
-              <div class="action-meta" style="margin-top:var(--space-1)">
-                <span class="action-co2">🌿 ${action.co2Saved} kg CO₂/day</span>
-                <span class="action-points">⭐ ${action.points} pts</span>
+          <div class="insight-card" style="cursor:pointer; display:flex; gap:var(--space-3); padding:var(--space-4); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-xl);" onclick="document.querySelector('[data-tab=actions]').click()">
+            <div class="insight-icon ${action.category}" style="width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; flex-shrink:0;">${action.icon}</div>
+            <div class="insight-body" style="flex:1; min-width:0;">
+              <div class="insight-title" style="font-weight:600; font-size:var(--text-sm);">${action.label}</div>
+              <div class="action-meta" style="margin-top:var(--space-1); display:flex; gap:var(--space-3); font-size:var(--text-xs); color:var(--text-tertiary)">
+                <span class="action-co2" style="color:var(--primary); font-weight:600;">🌿 ${action.co2Saved} kg CO₂/day</span>
+                <span class="action-points" style="color:var(--warning); font-weight:600;">⭐ ${action.points} pts</span>
               </div>
-              <div class="insight-impact">
+              <div class="insight-impact" style="font-size:var(--text-xs); color:var(--text-secondary); margin-top:4px;">
                 ${(action.co2Saved * 365).toFixed(0)} kg CO₂ saved per year
               </div>
             </div>
@@ -92,19 +103,32 @@ function renderInsights() {
       </div>
     </div>
 
+    <!-- Future Habits Projection Section -->
+    <div class="card mb-6">
+      <div class="card-header">
+        <h3 class="card-title"><i data-lucide="trending-down"></i> Future Footprint Projection</h3>
+      </div>
+      <p class="card-subtitle" style="margin-bottom:var(--space-4)">
+        Compare your projected carbon footprint over 1, 5, and 10 years under your current habits vs. if you adopt recommended eco-actions.
+      </p>
+      <div class="chart-container" style="height:260px">
+        <canvas id="projection-chart"></canvas>
+      </div>
+    </div>
+
     <!-- Personalized Insights -->
     <div class="card mb-6">
       <div class="card-header">
-        <h3 class="card-title">📊 Detailed Insights</h3>
+        <h3 class="card-title"><i data-lucide="lightbulb"></i> Detailed Insights</h3>
       </div>
-      <div class="insights-list">
+      <div class="insights-list" style="display:flex; flex-direction:column; gap:var(--space-3)">
         ${insights.map(insight => `
-          <div class="insight-card">
-            <div class="insight-icon ${insight.category}">${insight.icon}</div>
-            <div class="insight-body">
-              <div class="insight-title">${insight.title}</div>
-              <div class="insight-text">${insight.text}</div>
-              ${insight.impact ? `<div class="insight-impact">${insight.impact}</div>` : ''}
+          <div class="insight-card" style="display:flex; gap:var(--space-3); padding:var(--space-4); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-xl);">
+            <div class="insight-icon ${insight.category}" style="width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; flex-shrink:0;">${insight.icon}</div>
+            <div class="insight-body" style="flex:1; min-width:0;">
+              <div class="insight-title" style="font-weight:600; font-size:var(--text-sm);">${insight.title}</div>
+              <div class="insight-text" style="font-size:var(--text-xs); color:var(--text-secondary); margin-top:2px;">${insight.text}</div>
+              ${insight.impact ? `<div class="insight-impact" style="font-size:var(--text-xs); color:var(--primary); font-weight:600; margin-top:4px;">${insight.impact}</div>` : ''}
             </div>
           </div>
         `).join('')}
@@ -114,7 +138,7 @@ function renderInsights() {
     <!-- Comparison Insight -->
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">🌍 Where You Stand</h3>
+        <h3 class="card-title"><i data-lucide="globe"></i> Where You Stand</h3>
       </div>
       <div class="comparison-bars">
         <div class="comparison-bar-row">
@@ -136,6 +160,112 @@ function renderInsights() {
       </div>
     </div>
   `;
+
+  // Render Sub-Modules & Charts
+  setTimeout(() => {
+    initAICoach('ai-coach-container');
+    renderProjectionChart(profile.footprint, topActions);
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }, 100);
+}
+
+function renderProjectionChart(footprint, topActions) {
+  const canvas = document.getElementById('projection-chart');
+  if (!canvas) return;
+
+  if (projectionChart) {
+    projectionChart.destroy();
+    projectionChart = null;
+  }
+
+  // Calculate annual savings in tonnes
+  const dailySavingsKg = topActions.reduce((sum, a) => sum + a.co2Saved, 0);
+  const annualSavingsT = Math.round((dailySavingsKg * 365 / 1000) * 100) / 100;
+  
+  // Recommended habits projection is user's total minus savings
+  const recommendedTotal = Math.max(0.2, Math.round((footprint.total - annualSavingsT) * 100) / 100);
+
+  const ctx = canvas.getContext('2d');
+
+  // Gradients for columns
+  const gradCurrent = ctx.createLinearGradient(0, 0, 0, 240);
+  gradCurrent.addColorStop(0, '#F87171');
+  gradCurrent.addColorStop(1, '#EF4444');
+
+  const gradRecommended = ctx.createLinearGradient(0, 0, 0, 240);
+  gradRecommended.addColorStop(0, '#34D399');
+  gradRecommended.addColorStop(1, '#10B981');
+
+  projectionChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['1 Year', '5 Years', '10 Years'],
+      datasets: [
+        {
+          label: 'Current Habits',
+          data: [footprint.total, footprint.total * 5, footprint.total * 10].map(v => Math.round(v * 10) / 10),
+          backgroundColor: gradCurrent,
+          borderRadius: 6,
+          barPercentage: 0.8,
+          categoryPercentage: 0.7
+        },
+        {
+          label: 'Recommended Habits',
+          data: [recommendedTotal, recommendedTotal * 5, recommendedTotal * 10].map(v => Math.round(v * 10) / 10),
+          backgroundColor: gradRecommended,
+          borderRadius: 6,
+          barPercentage: 0.8,
+          categoryPercentage: 0.7
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            usePointStyle: true,
+            boxWidth: 10,
+            font: { family: "'Inter', sans-serif", weight: '600', size: 12 }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15,23,42,0.95)',
+          titleFont: { family: "'Inter', sans-serif", weight: '700', size: 13 },
+          bodyFont: { family: "'Inter', sans-serif", size: 12 },
+          padding: 12,
+          cornerRadius: 10,
+          borderColor: '#10B981',
+          borderWidth: 1,
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} tonnes CO₂`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { family: "'Inter', sans-serif", size: 12 },
+            color: '#94A3B8'
+          }
+        },
+        y: {
+          grid: { color: 'rgba(148,163,184,0.06)' },
+          ticks: {
+            font: { family: "'Inter', sans-serif", size: 11 },
+            color: '#94A3B8',
+            callback: (val) => val + ' t'
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
 }
 
 function getHighestCategory(footprint) {
