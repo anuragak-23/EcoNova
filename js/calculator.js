@@ -50,6 +50,7 @@ export function initCalculator() {
     input.addEventListener('input', (e) => {
       const display = document.getElementById(`val-${e.target.id}`);
       if (display) display.textContent = e.target.value;
+      e.target.setAttribute('aria-valuenow', e.target.value);
     });
   });
 
@@ -109,7 +110,11 @@ function renderQuestion(q, stepKey) {
             <span class="range-unit">${q.unit}</span>
           </div>
           <input type="range" id="${id}" name="${id}"
-            min="${q.min}" max="${q.max}" step="${q.step}" value="${q.default}">
+            min="${q.min}" max="${q.max}" step="${q.step}" value="${q.default}"
+            aria-label="${q.label}"
+            aria-valuemin="${q.min}"
+            aria-valuemax="${q.max}"
+            aria-valuenow="${q.default}">
         </div>
         ${q.helpText ? `<p class="form-help">${q.helpText}</p>` : ''}
       </div>

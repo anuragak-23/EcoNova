@@ -5,6 +5,7 @@
 
 import { ECO_ACTIONS, CATEGORIES } from './data.js';
 import { getProfile, saveProfile, getTodayKey, getDailyLog, saveDailyLog, calculateStreak } from './storage.js';
+import { showToast } from './app.js';
 
 let activeFilters = { category: 'all', impact: 'all' };
 
@@ -235,23 +236,3 @@ function updateHeaderStats(profile) {
     }
   }
 }
-
-function showToast(message) {
-  let toast = document.getElementById('toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.id = 'toast';
-    document.body.appendChild(toast);
-  }
-
-  toast.textContent = message;
-  toast.classList.add('show');
-
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2500);
-}
-
-// Export showToast for use by other modules
-export { showToast };

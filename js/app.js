@@ -18,7 +18,8 @@ import {
   signInAsGuest, 
   signOutUser, 
   getCurrentUser,
-  resetPassword
+  resetPassword,
+  getFirebaseEnabled
 } from './auth.js';
 
 let currentTab = 'dashboard';
@@ -79,6 +80,11 @@ function onAuthChange(user) {
   if (landingPage) landingPage.style.display = 'none';
   if (authPage) authPage.style.display = 'none';
   if (appContainer) appContainer.style.display = 'block';
+
+  // Inform user about Demo Mode if active
+  if (!getFirebaseEnabled()) {
+    showToast(`ℹ️ Running in Demo Mode (${user.isAnonymous ? 'Guest Session' : user.displayName})`);
+  }
 
   // Toggle guest banner
   if (user.isAnonymous) {
@@ -187,7 +193,7 @@ function setupAuthFormListeners() {
     try {
       await signIn(email, password, rememberMe);
     } catch (err) {
-      alert('Error: ' + err.message);
+      showToast('❌ Error: ' + err.message);
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
@@ -204,7 +210,7 @@ function setupAuthFormListeners() {
     const country = document.getElementById('signup-country')?.value || 'IN';
 
     if (password !== confirmPassword) {
-      alert('Error: Passwords do not match.');
+      showToast('❌ Error: Passwords do not match.');
       return;
     }
 
@@ -218,7 +224,7 @@ function setupAuthFormListeners() {
     try {
       await signUp(email, password, name, country);
     } catch (err) {
-      alert('Error: ' + err.message);
+      showToast('❌ Error: ' + err.message);
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
@@ -231,15 +237,15 @@ function setupAuthFormListeners() {
     e.preventDefault();
     const email = document.getElementById('signin-email')?.value.trim();
     if (!email) {
-      alert('Please enter your email address in the Email field first.');
+      showToast('ℹ️ Please enter your email address in the Email field first.');
       return;
     }
 
     try {
       await resetPassword(email);
-      alert('📩 Reset link sent! Please check your email inbox.');
+      showToast('📩 Reset link sent! Please check your email inbox.');
     } catch (err) {
-      alert('Error: ' + err.message);
+      showToast('❌ Error: ' + err.message);
     }
   });
 
@@ -251,7 +257,7 @@ function setupAuthFormListeners() {
     try {
       await signInWithGoogle();
     } catch (err) {
-      alert('Error: ' + err.message);
+      showToast('❌ Error: ' + err.message);
       googleBtn.disabled = false;
       googleBtn.innerHTML = originalText;
     }
@@ -722,7 +728,7 @@ function handleOnboardNext() {
     const nameInput = document.getElementById('onboard-name');
     const name = nameInput?.value.trim();
     if (!name) {
-      alert('Please enter your name.');
+      showToast('ℹ️ Please enter your name.');
       return;
     }
     const profile = getProfile();
@@ -1065,7 +1071,7 @@ function renderProfile() {
         link.click();
       });
     } else {
-      alert('html2canvas script is still loading. Please try again in a moment.');
+      showToast('ℹ️ html2canvas script is still loading. Please try again in a moment.');
     }
   });
 
@@ -1082,7 +1088,7 @@ function renderProfile() {
       navigator.share(shareData).catch(err => console.log('Web Share API blocked:', err));
     } else {
       navigator.clipboard.writeText(shareText + ' ' + shareData.url);
-      alert('📋 scorecard stats copied to clipboard! Share it with your friends!');
+      showToast('📋 Scorecard stats copied to clipboard! Share it with your friends!');
     }
   });
 
@@ -1090,4 +1096,22 @@ function renderProfile() {
   if (window.lucide) {
     window.lucide.createIcons();
   }
+}
+
+// ── Unified Toast Notification system ───────────────────────
+export function showToast(message) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
 }

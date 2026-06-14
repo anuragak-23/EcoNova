@@ -11,7 +11,7 @@
   /* Colors — Light Mode (Default) */
   --primary:          #10B981;
   --primary-light:    #34D399;
-  --primary-dark:     #059669;
+  --primary-dark:     #047857;
   --primary-bg:       #ECFDF5;
   --primary-glow:     rgba(16, 185, 129, 0.25);
 
@@ -46,7 +46,7 @@
 
   --text-primary:     #0F172A;
   --text-secondary:   #475569;
-  --text-tertiary:    #94A3B8;
+  --text-tertiary:    #5E6E82;
   --text-inverse:     #FFFFFF;
 
   --shadow-sm:        0 1px 2px rgba(0,0,0,0.05);
@@ -122,7 +122,7 @@
 
   --text-primary:    #F1F5F9;
   --text-secondary:  #94A3B8;
-  --text-tertiary:   #64748B;
+  --text-tertiary:   #8A99AD;
   --text-inverse:    #0F172A;
 
   --primary-bg:      rgba(16, 185, 129, 0.1);
@@ -207,12 +207,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-  color: var(--primary);
+  color: var(--primary-dark);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
-a:hover { color: var(--primary-dark); }
+a:hover { color: var(--primary); }
+
+[data-theme="dark"] a {
+  color: var(--primary-light);
+}
+
+[data-theme="dark"] a:hover {
+  color: var(--primary);
+}
 
 img { max-width: 100%; display: block; }
 
@@ -221,6 +229,16 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+}
+
+/* Custom Accessibility Focus Indicators */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--primary-light) !important;
+  outline-offset: 2px;
 }
 
 input, select, textarea {
@@ -991,9 +1009,9 @@ input[type="range"]::-moz-range-thumb {
 .btn:hover::after { opacity: 1; }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, #059669, #03543f);
   color: white;
-  box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+  box-shadow: 0 4px 12px rgba(5,150,105,0.3);
 }
 
 .btn-primary:hover {
@@ -1019,13 +1037,23 @@ input[type="range"]::-moz-range-thumb {
 
 .btn-outline {
   background: transparent;
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  color: var(--primary-dark);
+  border: 2px solid var(--primary-dark);
 }
 
 .btn-outline:hover {
-  background: var(--primary);
+  background: var(--primary-dark);
   color: white;
+}
+
+[data-theme="dark"] .btn-outline {
+  color: var(--primary-light);
+  border-color: var(--primary-light);
+}
+
+[data-theme="dark"] .btn-outline:hover {
+  background: var(--primary-light);
+  color: var(--text-inverse);
 }
 
 .btn-lg {
@@ -3644,4 +3672,10 @@ input[type="range"]::-moz-range-thumb {
   100% { transform: translateY(-120px) translateX(30px); opacity: 0; }
 }
 
-
+/* ── Accessibility Text Contrast Class ──────────────────── */
+.text-contrast {
+  color: var(--primary-dark) !important;
+}
+[data-theme="dark"] .text-contrast {
+  color: var(--primary-light) !important;
+}
