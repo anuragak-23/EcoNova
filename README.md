@@ -12,6 +12,7 @@
 <br/>
 
 [![Status: Active](https://img.shields.io/badge/Status-Active-emerald?style=flat-square)](#)
+![AI](https://img.shields.io/badge/AI-Gemini-blue)
 [![Deployment: Vercel](https://img.shields.io/badge/Deployment-Vercel-black?style=flat-square)](#)
 
 </div>
@@ -24,15 +25,12 @@ Here is a preview of the EcoNova interface in action:
 
 | **Landing Page** | **Carbon Calculator** |
 |:---:|:---:|
-| ![Landing Page](screenshots/landing-page.png) | ![Carbon Calculator](screenshots/calculator.png) |
+| ![Landing Page](EcoNova-screenshots/landing-page.png) | ![Carbon Calculator](EcoNova-screenshots/carbon-calculator.png) |
 
 | **Dashboard** | **AI Climate Coach** |
 |:---:|:---:|
-| ![Dashboard](screenshots/dashboard.png) | ![AI Coach](screenshots/ai-coach.png) |
+| ![Dashboard](EcoNova-screenshots/Dashboard.png) | ![AI Coach](EcoNova-screenshots/Ai-coach.png) |
 
-| **Climate Profile** |
-|:---:|
-| ![Climate Profile](screenshots/profile.png) |
 
 ---
 
