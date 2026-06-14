@@ -2,14 +2,13 @@
 
 # 🌍 EcoNova
 
-### AI-Powered Sustainability Platform
+### AI-Powered Sustainability Intelligence Platform
 
 Track, understand, and reduce your carbon footprint through AI-powered insights, sustainability tracking, and personalized climate coaching.
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen?style=for-the-badge&logo=vercel)](https://econova.vercel.app)
 [![Demo Video](https://img.shields.io/badge/Video-Demo-red?style=for-the-badge&logo=youtube)](#)
 [![GitHub Stars](https://img.shields.io/github/stars/anuragak-23/EcoNova?style=for-the-badge&logo=github)](#)
-[![Hackathon Name](https://img.shields.io/badge/Hackathon-Gemini%20AI%20Sustainability-orange?style=for-the-badge)](#hackathon-submission)
 
 <br/>
 
@@ -155,37 +154,22 @@ $$\text{Total Footprint (t CO}_{2}\text{e/year)} = \text{Transport} + \text{Ener
 
 ### Local Setup
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/anuragak-23/EcoNova.git
    cd EcoNova
    ```
-2. Copy the environment variables template:
+2. **Configure environment variables**: Copy `.env.local.example` to `.env.local` and add your `GEMINI_API_KEY` (and optional Firebase credentials).
+3. **Run a local server**:
    ```bash
-   cp .env.local.example .env.local
-   ```
-3. Set your variables in `.env.local` (e.g., your `GEMINI_API_KEY`).
-4. Spin up a local static server to view:
-   ```bash
-   # Python
    python -m http.server 8000
-   
-   # Node/NPM
-   npm install -g serve
-   serve
    ```
-
-### Environment Variables
-
-Configure the following variables in Vercel or your local `.env.local` file:
-*   `GEMINI_API_KEY`: Google Gemini API Key.
-*   `FIREBASE_API_KEY` / `FIREBASE_PROJECT_ID` / `FIREBASE_APP_ID`: Firebase Web App credentials (optional).
 
 ### Vercel Deployment
 
-1. Connect your GitHub repository to [Vercel](https://vercel.com).
-2. Go to **Project Settings** -> **Environment Variables** and add `GEMINI_API_KEY`.
-3. Click **Deploy**. Vercel will build the static client and host the serverless functions in `/api/` automatically.
+1. **Import project**: Connect your GitHub repository to [Vercel](https://vercel.com).
+2. **Configure environment variables**: Add your `GEMINI_API_KEY` in Vercel's **Environment Variables** settings.
+3. **Deploy**: Click **Deploy** to automatically build and launch the static client and serverless API endpoints.
 
 ---
 
@@ -198,6 +182,5 @@ Configure the following variables in Vercel or your local `.env.local` file:
 *   **IoT Sustainability Tracking**: Connect smart plugs to track phantom appliance loads in real time.
 
 ---
-
 
 **Built with 💚 for a greener planet**
