@@ -4,7 +4,7 @@
 
 ### AI-Powered Sustainability Intelligence Platform
 
-Track, understand, and reduce your carbon footprint through AI-powered insights, sustainability tracking, and personalized climate coaching.
+> Smarter Choices for a Greener Future. Track, understand, and reduce your carbon footprint through interactive carbon accounting, gamified action logging, and personalized AI climate coaching.
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen?style=for-the-badge&logo=vercel)](https://eco-nova23.vercel.app/)
 [![GitHub Stars](https://img.shields.io/github/stars/anuragak-23/EcoNova?style=for-the-badge&logo=github)](#)
