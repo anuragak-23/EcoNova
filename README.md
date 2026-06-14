@@ -64,7 +64,7 @@ EcoNova is engineered as a secure, fast, and modern static application powered b
 graph TD
     User([User]) --> EcoNova[EcoNova Client App]
     
-    subgraph Frontend (Vanilla Web)
+    subgraph Frontend ["Frontend (Vanilla Web)"]
         EcoNova --> Auth[Dual-Mode Auth]
         EcoNova --> Calculator[Carbon Calculator]
         EcoNova --> Dashboard[Analytics Dashboard]
@@ -72,7 +72,7 @@ graph TD
         EcoNova --> Avatar[Carbon Avatar]
     end
     
-    subgraph Secure Backend (Vercel Serverless)
+    subgraph Backend ["Secure Backend (Vercel Serverless)"]
         Auth --> FirebaseProxy[/api/firebase-config]
         AICoach --> GeminiProxy[/api/gemini]
         GeminiProxy --> GeminiAPI[Google Gemini API]
