@@ -6,8 +6,7 @@
 
 Track, understand, and reduce your carbon footprint through AI-powered insights, sustainability tracking, and personalized climate coaching.
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen?style=for-the-badge&logo=vercel)](https://econova.vercel.app)
-[![Demo Video](https://img.shields.io/badge/Video-Demo-red?style=for-the-badge&logo=youtube)](#)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen?style=for-the-badge&logo=vercel)](https://eco-nova23.vercel.app/)
 [![GitHub Stars](https://img.shields.io/github/stars/anuragak-23/EcoNova?style=for-the-badge&logo=github)](#)
 
 <br/>
@@ -19,34 +18,6 @@ Track, understand, and reduce your carbon footprint through AI-powered insights,
 
 </div>
 
----
-
-## ⚡ Product Demo
-
-![EcoNova Platform Demo](demo.gif)
-
-*A walk-through of the onboarding wizard showing: Landing Page → Carbon Calculator → Dashboard → AI Coach → Results.*
-
----
-
-## 📸 Screenshots
-
-| Landing Page | Carbon Calculator |
-| :---: | :---: |
-| ![Landing Page](screenshots/landing-page.png) | ![Carbon Calculator](screenshots/calculator.png) |
-
-| Dashboard | AI Coach |
-| :---: | :---: |
-| ![Dashboard](screenshots/dashboard.png) | ![AI Coach](screenshots/ai-coach.png) |
-
-| Climate Profile |
-| :---: |
-| ![Climate Profile](screenshots/profile.png) |
-
-> [!NOTE]
-> Contributors: Please place screenshots of the interface inside the `/screenshots` directory.
-
----
 
 ## 💡 Why EcoNova?
 
