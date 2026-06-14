@@ -19,7 +19,8 @@ import {
   signOutUser, 
   getCurrentUser,
   resetPassword,
-  getFirebaseEnabled
+  getFirebaseEnabled,
+  validateRegistrationInput
 } from './auth.js';
 
 let currentTab = 'dashboard';
@@ -208,6 +209,12 @@ function setupAuthFormListeners() {
     const password = document.getElementById('signup-password')?.value;
     const confirmPassword = document.getElementById('signup-confirm-password')?.value;
     const country = document.getElementById('signup-country')?.value || 'IN';
+
+    const validation = validateRegistrationInput(email, password, name);
+    if (!validation.valid) {
+      showToast('❌ Error: ' + validation.error);
+      return;
+    }
 
     if (password !== confirmPassword) {
       showToast('❌ Error: Passwords do not match.');

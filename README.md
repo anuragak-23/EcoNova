@@ -8,6 +8,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen?style=for-the-badge&logo=vercel)](https://eco-nova23.vercel.app/)
 [![GitHub Repo](https://img.shields.io/badge/Code-Repository-blue?style=for-the-badge&logo=github)](https://github.com/anuragak-23/EcoNova)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/anuragak-23/EcoNova/test.yml?branch=main&style=for-the-badge&logo=github)](https://github.com/anuragak-23/EcoNova/actions/workflows/test.yml)
 <br/>
 
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)

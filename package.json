@@ -1,0 +1,16 @@
+{
+  "name": "econova",
+  "version": "1.0.0",
+  "description": "EcoNova — AI-Powered Sustainability Intelligence Platform",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "echo 'Static app. Build success!'"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitest": "^1.6.0",
+    "happy-dom": "^14.12.0"
+  }
+}

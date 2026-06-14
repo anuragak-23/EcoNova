@@ -449,3 +449,16 @@ export function getCurrentUser() {
 export function getFirebaseEnabled() {
   return isFirebaseEnabled;
 }
+
+export function validateRegistrationInput(email, password, fullName) {
+  if (!fullName || fullName.trim() === '') {
+    return { valid: false, error: 'Name is required' };
+  }
+  if (!email || !email.includes('@')) {
+    return { valid: false, error: 'Invalid email address' };
+  }
+  if (!password || password.length < 6) {
+    return { valid: false, error: 'Password must be at least 6 characters' };
+  }
+  return { valid: true };
+}

@@ -137,7 +137,7 @@ async function handleGenerateAdvice(profile, isConfigured) {
   }
 }
 
-function generateRuleBasedAdvice(footprint, highestCategory) {
+export function generateRuleBasedAdvice(footprint, highestCategory) {
   let co2Reduction = 0;
   let actions = [];
 

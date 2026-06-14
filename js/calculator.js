@@ -8,7 +8,7 @@ import { getProfile, saveProfile } from './storage.js';
 
 let currentStep = 0;
 const steps = ['transport', 'energy', 'food', 'lifestyle', 'results'];
-const answers = {};
+export const answers = {};
 let resultsChart = null;
 let breakdownChart = null;
 
@@ -175,7 +175,7 @@ function updateStepUI() {
   });
 }
 
-function calculateFootprint() {
+export function calculateFootprint() {
   const result = { transport: 0, energy: 0, food: 0, lifestyle: 0, total: 0 };
 
   // ── Transport ──
