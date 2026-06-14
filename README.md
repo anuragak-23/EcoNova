@@ -36,6 +36,39 @@ Here is a preview of the EcoNova interface in action:
 
 ---
 
+## 🎯 The Problem
+
+Climate change is one of the most pressing challenges facing our generation. While many people want to live more sustainably, they often struggle to understand:
+
+*   **Emissions baseline**: How much carbon they actually emit through their daily routines.
+*   **Highest contributors**: Which specific daily activities contribute the most to their footprint.
+*   **High-impact actions**: What exact actions will have the biggest and most immediate positive impact.
+*   **Motivation**: How to stay motivated and build consistent, eco-friendly habits over time.
+
+Most traditional carbon calculators provide a single number and stop there. They create awareness but fail to drive meaningful behavior change. As a result, users remain **informed but not empowered**.
+
+---
+
+## 💡 Our Solution
+
+EcoNova is an AI-powered sustainability platform designed to transform carbon awareness into measurable action. Instead of simply calculating emissions, EcoNova helps users:
+
+*   **Understand**: Get an accurate breakdown of emissions across key life categories.
+*   **Target**: Receive personalized AI recommendations tailored to their footprint profile.
+*   **Act**: Build sustainable daily habits by logging check-ins.
+*   **Monitor**: Track long-term progress with real-time carbon reduction metrics.
+*   **Engage**: Stay motivated through gamification, streak counts, and milestone achievements.
+
+The platform combines climate intelligence, behavioral design, and data visualization to help users make smarter environmental decisions every day.
+
+### From Awareness to Action
+
+Most existing tools focus solely on measurement. EcoNova is designed to guide users through the entire behavioral change funnel:
+
+$$\text{Measurement} \longrightarrow \text{Understanding} \longrightarrow \text{Action} \longrightarrow \text{Habit Formation} \longrightarrow \text{Long-Term Impact}$$
+
+---
+
 ## 💡 Why EcoNova?
 
 Climate change is one of the defining challenges of our generation. 
