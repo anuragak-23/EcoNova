@@ -199,12 +199,5 @@ Configure the following variables in Vercel or your local `.env.local` file:
 
 ---
 
-## 🏆 Hackathon Submission
-
-*   **Challenge**: Help individuals understand, track, and reduce their carbon footprint through personalized insights and simple actions.
-*   **Team**: Anurag
-*   **Built For**: Gemini AI Sustainability Hackathon
-
----
 
 **Built with 💚 for a greener planet**
