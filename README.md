@@ -421,6 +421,37 @@ Total Footprint (tonnes CO₂e/year) =
 
 ---
 
+## ⚙️ Environment Variables
+
+To configure the project locally and in production on Vercel, copy `.env.local.example` to `.env.local` (local only) and set the following variables:
+
+- **`GEMINI_API_KEY`**: Your Google Gemini API Key. Used securely on the server side by `/api/gemini` serverless functions.
+- **`FIREBASE_API_KEY`**: Firebase public API Key (if using Firebase Authentication).
+- **`FIREBASE_AUTH_DOMAIN`**: Firebase authentication domain.
+- **`FIREBASE_PROJECT_ID`**: Firebase project ID.
+- **`FIREBASE_STORAGE_BUCKET`**: Firebase storage bucket URI.
+- **`FIREBASE_MESSAGING_SENDER_ID`**: Firebase messaging sender ID.
+- **`FIREBASE_APP_ID`**: Firebase application ID.
+
+---
+
+## 🚀 Vercel Production Deployment
+
+This project is configured as a static application with Node.js Serverless Functions inside the `/api` directory. To deploy it to Vercel:
+
+1. **Push your code to GitHub**: Commit your files and push them to your GitHub repository.
+2. **Import to Vercel**:
+   - Log in to your [Vercel Dashboard](https://vercel.com).
+   - Click **Add New** -> **Project**.
+   - Import your `EcoNova` repository.
+3. **Configure Environment Variables**:
+   - Under the **Environment Variables** section, add all variables defined in `.env.local.example` (such as `GEMINI_API_KEY`, `FIREBASE_PROJECT_ID`, etc.).
+4. **Deploy**:
+   - Leave the build settings as default.
+   - Click **Deploy**. Vercel will automatically host the static files and map the serverless functions in `/api` to their respective HTTP endpoints.
+
+---
+
 **Built with 💚 for a greener planet**
 
 *© 2026 EcoNova*

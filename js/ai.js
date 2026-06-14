@@ -9,7 +9,7 @@ import { getProfile } from './storage.js';
  * Initializes the AI Coach widget inside a specified container
  * @param {string} containerId - Element ID to render into
  */
-export function initAICoach(containerId = 'ai-coach-container') {
+export async function initAICoach(containerId = 'ai-coach-container') {
   const container = document.getElementById(containerId);
   if (!container) return;
 
@@ -21,8 +21,18 @@ export function initAICoach(containerId = 'ai-coach-container') {
     return;
   }
 
-  const apiKey = profile.settings?.geminiApiKey || '';
-  const isDemo = !apiKey;
+  // Determine serverless API config status
+  let isConfigured = false;
+  try {
+    const res = await fetch('/api/gemini-status');
+    if (res.ok) {
+      const data = await res.json();
+      isConfigured = !!data.configured;
+    }
+  } catch (e) {
+    console.warn('EcoNova: Serverless AI status check failed, using Local Demo mode.');
+    isConfigured = false;
+  }
 
   container.innerHTML = `
     <div class="card mb-6 glow-card" style="border: 1px solid var(--primary-glow);">
@@ -30,13 +40,13 @@ export function initAICoach(containerId = 'ai-coach-container') {
         <h3 class="card-title" style="color:var(--primary); font-size:var(--text-xl)">
           🤖 Eco AI Coach
         </h3>
-        ${isDemo ? `
-          <span style="font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--secondary); padding:2px 8px; border-radius:var(--radius-full); font-weight:700">
-            LOCAL DEMO MODE
+        ${isConfigured ? `
+          <span style="font-size:0.7rem; background:rgba(16,185,129,0.1); color:var(--primary); padding:2px 8px; border-radius:var(--radius-full); font-weight:700">
+            GEMINI AI ACTIVE
           </span>
         ` : `
-          <span style="font-size:0.7rem; background:rgba(16,185,129,0.1); color:var(--primary); padding:2px 8px; border-radius:var(--radius-full); font-weight:700">
-            GEMINI AI CONNECTED
+          <span style="font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--secondary); padding:2px 8px; border-radius:var(--radius-full); font-weight:700">
+            OFFLINE DEMO MODE
           </span>
         `}
       </div>
@@ -53,19 +63,13 @@ export function initAICoach(containerId = 'ai-coach-container') {
         <button class="btn btn-primary" id="btn-generate-ai">
           <i data-lucide="sparkles"></i> Generate Personalized Advice
         </button>
-        
-        ${isDemo ? `
-          <span style="font-size:var(--text-xs); color:var(--text-tertiary);">
-            💡 Configure Gemini Key in Profile tab for live AI.
-          </span>
-        ` : ''}
       </div>
     </div>
   `;
 
   // Bind Generate Button
   const btn = document.getElementById('btn-generate-ai');
-  btn?.addEventListener('click', () => handleGenerateAdvice(profile, apiKey));
+  btn?.addEventListener('click', () => handleGenerateAdvice(profile, isConfigured));
 
   // Run lucide icons replacement
   if (window.lucide) {
@@ -73,7 +77,7 @@ export function initAICoach(containerId = 'ai-coach-container') {
   }
 }
 
-async function handleGenerateAdvice(profile, apiKey) {
+async function handleGenerateAdvice(profile, isConfigured) {
   const output = document.getElementById('ai-coach-output');
   const btn = document.getElementById('btn-generate-ai');
   if (!output || !btn) return;
@@ -97,12 +101,12 @@ async function handleGenerateAdvice(profile, apiKey) {
   const highestCategory = Object.entries(cats).sort((a, b) => b[1] - a[1])[0][0];
 
   try {
-    if (!apiKey) {
+    if (!isConfigured) {
       // Simulate network delay for realistic experience
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       output.innerHTML = generateRuleBasedAdvice(fp, highestCategory);
     } else {
-      const responseHtml = await generateGeminiAdvice(apiKey, fp, highestCategory);
+      const responseHtml = await generateGeminiAdvice(fp, highestCategory);
       output.innerHTML = `
         <div class="ai-response-content">
           ${responseHtml}
@@ -113,7 +117,7 @@ async function handleGenerateAdvice(profile, apiKey) {
     console.error('AI Coach Error:', error);
     output.innerHTML = `
       <div style="background:var(--danger-bg); border:1px dashed var(--danger); padding:var(--space-4); border-radius:var(--radius-lg); color:var(--danger); font-size:var(--text-sm);">
-        ⚠️ <strong>AI Coach Error</strong>: Failed to connect to Gemini API. Please check your API key in the Profile tab and try again.
+        ⚠️ <strong>AI insights are temporarily unavailable.</strong> Please try again later.
         <br><br>
         <button class="btn btn-secondary btn-sm" id="btn-ai-fallback-retry" style="padding:4px 12px; font-size:0.75rem; margin-top:4px">
           Use Offline AI Fallback
@@ -195,40 +199,21 @@ function generateRuleBasedAdvice(footprint, highestCategory) {
   `;
 }
 
-async function generateGeminiAdvice(apiKey, footprint, highestCategory) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-  const prompt = `You are EcoNova's AI Sustainability Coach. Analyze this user's carbon footprint data:
-- Transport emissions: ${footprint.transport} tonnes CO₂/year
-- Energy emissions: ${footprint.energy} tonnes CO₂/year
-- Food emissions: ${footprint.food} tonnes CO₂/year
-- Lifestyle emissions: ${footprint.lifestyle} tonnes CO₂/year
-- Total footprint: ${footprint.total} tonnes CO₂/year
-The highest emission category is: ${highestCategory}.
-
-Provide a highly personalized sustainability report in HTML format.
-Requirements:
-1. Identify the highest emission category and summarize their profile in 2 short sentences.
-2. Suggest exactly 5 concrete, actionable daily habits they can log to reduce emissions (use bullet points).
-3. Estimate the total yearly CO₂ reduction (in tonnes) if they follow all 5 habits. Highlight this inside a card or banner.
-Keep the output clean, modern, and structured in standard HTML tags (div, p, ul, li, strong). Do not return markdown block wrappers like \`\`\`html.`;
-
-  const response = await fetch(url, {
+async function generateGeminiAdvice(footprint, highestCategory) {
+  const response = await fetch('/api/gemini', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }]
-    })
+    body: JSON.stringify({ footprint, highestCategory })
   });
 
   if (!response.ok) {
-    throw new Error('Gemini API request failed');
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || 'Gemini API request failed');
   }
 
   const json = await response.json();
-  let text = json.candidates[0].content.parts[0].text;
-  
-  // Clean markdown wrap if AI didn't follow instructions
-  text = text.replace(/```html/g, '').replace(/```/g, '').trim();
-
-  return text;
+  if (json.error) {
+    throw new Error(json.error);
+  }
+  return json.text;
 }

@@ -12,11 +12,8 @@ let currentUser = null;
 let authStateListeners = [];
 
 // Check if valid Firebase credentials are provided
-const isConfigValid = 
-  FIREBASE_CONFIG.apiKey && 
-  FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY" && 
-  FIREBASE_CONFIG.projectId && 
-  FIREBASE_CONFIG.projectId !== "YOUR_PROJECT_ID";
+let isConfigValid = false;
+let finalFirebaseConfig = null;
 
 // Mock User Database in LocalStorage
 const MOCK_USERS_KEY = 'econova_mock_users';
@@ -43,6 +40,29 @@ export async function initAuth(onStateChanged) {
     authStateListeners.push(onStateChanged);
   }
 
+  // Attempt to fetch configuration from Serverless Function
+  try {
+    const res = await fetch('/api/firebase-config');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.apiKey && data.apiKey !== "YOUR_API_KEY" && data.projectId && data.projectId !== "YOUR_PROJECT_ID") {
+        finalFirebaseConfig = data;
+        isConfigValid = true;
+      }
+    }
+  } catch (e) {
+    console.warn('EcoNova: Firebase Serverless config not found, checking local placeholder configuration.');
+  }
+
+  // Fallback to local import if serverless route is not configured or failed
+  if (!isConfigValid) {
+    const localConfig = FIREBASE_CONFIG;
+    if (localConfig && localConfig.apiKey && localConfig.apiKey !== "YOUR_API_KEY" && localConfig.projectId && localConfig.projectId !== "YOUR_PROJECT_ID") {
+      finalFirebaseConfig = localConfig;
+      isConfigValid = true;
+    }
+  }
+
   if (isConfigValid) {
     try {
       console.log('EcoNova: Initializing Firebase Authentication...');
@@ -60,7 +80,7 @@ export async function initAuth(onStateChanged) {
         updateProfile
       } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
 
-      const app = initializeApp(FIREBASE_CONFIG);
+      const app = initializeApp(finalFirebaseConfig);
       firebaseAuth = getAuth(app);
       isFirebaseEnabled = true;
 

@@ -995,19 +995,6 @@ function renderProfile() {
         </button>
       </div>
 
-      <!-- Gemini API Settings -->
-      <div class="settings-item" style="flex-direction:column; align-items:flex-start; gap:var(--space-2)">
-        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
-          <div>
-            <div class="settings-label">🔑 Gemini API Key</div>
-            <div class="settings-desc">For live sustainability advice on Insights tab</div>
-          </div>
-        </div>
-        <div style="display:flex; gap:8px; width:100%; max-width:350px; margin-top:4px;">
-          <input type="password" id="settings-gemini-key" class="form-select" style="background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-md); padding:6px 10px; font-size:var(--text-xs); flex:1; height:32px" placeholder="Paste API Key here..." value="${profile.settings?.geminiApiKey || ''}">
-          <button class="btn btn-secondary" id="btn-save-gemini-key" style="padding:0 var(--space-4); font-size:var(--text-xs); height:32px; flex-shrink:0;">Save</button>
-        </div>
-      </div>
 
       <div class="settings-item">
         <div>
@@ -1060,17 +1047,6 @@ function renderProfile() {
     }
   });
 
-  // Bind Save Gemini API key button
-  document.getElementById('btn-save-gemini-key')?.addEventListener('click', () => {
-    const keyInput = document.getElementById('settings-gemini-key');
-    const key = keyInput?.value.trim() || '';
-    const prof = getProfile();
-    if (!prof.settings) prof.settings = {};
-    prof.settings.geminiApiKey = key;
-    saveProfile(prof);
-    alert('🔑 Gemini API Key saved successfully!');
-    renderProfile();
-  });
 
   // Bind Download Scorecard image button
   document.getElementById('btn-download-card')?.addEventListener('click', () => {
