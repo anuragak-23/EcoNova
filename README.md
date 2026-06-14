@@ -251,6 +251,13 @@ graph TD
 ---
 
 
----
+<div align="center">
 
-**Built with 💚 for a greener planet**
+### 🌍 Measure Better. Live Greener. Impact More.
+
+*Turning carbon awareness into meaningful climate action.*
+
+</div>
+
+
+---
