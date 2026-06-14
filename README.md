@@ -151,20 +151,6 @@ Individual actions, when scaled, can change the planet.
 
 ---
 
-## 📸 Screenshots Gallery
-
-| **Interface** | **Preview Link** |
-| :--- | :--- |
-| **Landing Page** | [View Screen](screenshots/landing-page.png) |
-| **Dashboard** | [View Screen](screenshots/dashboard.png) |
-| **AI Coach** | [View Screen](screenshots/ai-coach.png) |
-| **Calculator** | [View Screen](screenshots/calculator.png) |
-| **Climate Profile** | [View Screen](screenshots/profile.png) |
-
-> [!NOTE]
-> Contributors: Please place screenshots of the interface inside the `/screenshots` directory.
-
----
 
 ## 🛠️ Technology Stack
 
