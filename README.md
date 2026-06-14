@@ -10,9 +10,11 @@
 [![GitHub Repo](https://img.shields.io/badge/Code-Repository-blue?style=for-the-badge&logo=github)](https://github.com/anuragak-23/EcoNova)
 
 <br/>
+
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)]
 [![AI Powered](https://img.shields.io/badge/AI-Gemini-blue?style=for-the-badge)]
 [![Deployment](https://img.shields.io/badge/Deployment-Vercel-black?style=for-the-badge)]
+
 <br/>
 
 ## 🛠️ Built With
