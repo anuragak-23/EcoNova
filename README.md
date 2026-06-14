@@ -8,13 +8,11 @@
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen?style=for-the-badge&logo=vercel)](https://eco-nova23.vercel.app/)
 [![GitHub Repo](https://img.shields.io/badge/Code-Repository-blue?style=for-the-badge&logo=github)](https://github.com/anuragak-23/EcoNova)
-[![Demo Video](https://img.shields.io/badge/Video-Demo-red?style=for-the-badge&logo=youtube)](#)
 
 <br/>
 
 [![Status: Active](https://img.shields.io/badge/Status-Active-emerald?style=flat-square)](#)
 [![Deployment: Vercel](https://img.shields.io/badge/Deployment-Vercel-black?style=flat-square)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-purple?style=flat-square)](#)
 
 </div>
 
@@ -54,10 +52,10 @@ EcoNova redesigns carbon accounting from the ground up, contrasting traditional 
 
 | **Traditional Carbon Calculators** | **EcoNova** |
 | :--- | :--- |
-| ❌ **Static calculations** done once a year | 🔄 **Dynamic tracking** that updates in real time |
-| ❌ **Generic recommendations** list | 🤖 **AI Sustainability Coach** with tailored advice |
-| ❌ **No engagement** or incentive | 🏆 **Gamified progression** with points & streaks |
-| ❌ **Awareness only** | 🌱 **Habit formation** built around loggable actions |
+|  **Static calculations** done once a year | 🔄 **Dynamic tracking** that updates in real time |
+|  **Generic recommendations** list | 🤖 **AI Sustainability Coach** with tailored advice |
+|  **No engagement** or incentive | 🏆 **Gamified progression** with points & streaks |
+|  **Awareness only** | 🌱 **Habit formation** built around loggable actions |
 
 ---
 
@@ -152,23 +150,33 @@ EcoNova is engineered as a secure, fast, and modern static application powered b
 
 ```mermaid
 graph TD
-    User([User]) --> EcoNova[EcoNova Client App]
-    
-    subgraph Frontend ["Frontend (Vanilla Web)"]
-        EcoNova --> Auth[Dual-Mode Auth]
-        EcoNova --> Calculator[Carbon Calculator]
-        EcoNova --> Dashboard[Analytics Dashboard]
-        EcoNova --> AICoach[AI Climate Coach]
-        EcoNova --> Avatar[Carbon Avatar]
+
+    User[User] --> EcoNova[EcoNova Client App]
+
+    subgraph Frontend
+        Auth[Dual-Mode Auth]
+        Calculator[Carbon Calculator]
+        Dashboard[Analytics Dashboard]
+        AICoach[AI Climate Coach]
+        Avatar[Carbon Avatar]
+
+        EcoNova --> Auth
+        EcoNova --> Calculator
+        EcoNova --> Dashboard
+        EcoNova --> AICoach
+        EcoNova --> Avatar
     end
-    
-    subgraph Backend ["Secure Backend (Vercel Serverless)"]
-        Auth --> FirebaseProxy[/api/firebase-config]
-        AICoach --> GeminiProxy[/api/gemini]
-        GeminiProxy --> GeminiAPI[Google Gemini API]
+
+    subgraph Backend
+        FirebaseProxy[Firebase Config API]
+        GeminiProxy[Gemini API Route]
+        GeminiAPI[Google Gemini API]
+
+        Auth --> FirebaseProxy
+        AICoach --> GeminiProxy
+        GeminiProxy --> GeminiAPI
     end
 ```
-
 ---
 
 ## 🚀 Getting Started
@@ -209,10 +217,6 @@ graph TD
 
 ---
 
-## 🏆 Hackathon Submission
-
-*   **Challenge**: Help individuals understand, track, and reduce their carbon footprint.
-*   **Built With**: AI (Gemini), Sustainability, Data Visualization (Chart.js), and Behavioral Design (gamification systems).
 
 ---
 
