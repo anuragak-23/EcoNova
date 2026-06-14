@@ -19,10 +19,28 @@ let finalFirebaseConfig = null;
 const MOCK_USERS_KEY = 'econova_mock_users';
 const SESSION_USER_KEY = 'econova_session_user';
 
+function isApiKeyError(err) {
+  const msg = (err.message || '').toLowerCase();
+  const code = (err.code || '').toLowerCase();
+  return msg.includes('api-key') || msg.includes('api_key') || code.includes('api-key') || code.includes('api_key') || msg.includes('invalid-key') || code.includes('invalid-key') || msg.includes('api key');
+}
+
 function getMockUsers() {
   try {
     const raw = localStorage.getItem(MOCK_USERS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const users = raw ? JSON.parse(raw) : [];
+    if (users.length === 0) {
+      // Pre-seed a default demo user
+      users.push({
+        uid: 'sim-demo',
+        email: 'demo@econova.ai',
+        password: 'password123',
+        displayName: 'Demo Explorer',
+        country: 'IN'
+      });
+      localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
+    }
+    return users;
   } catch (e) {
     return [];
   }
@@ -183,9 +201,18 @@ function syncProfileFromUser(user) {
 // 1. Email/Password Sign In
 export async function signIn(email, password, rememberMe = true) {
   if (isFirebaseEnabled && firebaseAuth) {
-    // Firebase Auth
-    const userCredential = await window.firebaseSignIn(email, password);
-    return userCredential.user;
+    try {
+      // Firebase Auth
+      const userCredential = await window.firebaseSignIn(email, password);
+      return userCredential.user;
+    } catch (err) {
+      if (isApiKeyError(err)) {
+        console.warn('EcoNova: Firebase API key issue detected. Falling back to Demo Auth Mode.', err);
+        isFirebaseEnabled = false;
+        return signIn(email, password, rememberMe);
+      }
+      throw err;
+    }
   } else {
     // Simulated Auth
     return new Promise((resolve, reject) => {
@@ -208,7 +235,12 @@ export async function signIn(email, password, rememberMe = true) {
           notifyListeners();
           resolve(currentUser);
         } else {
-          reject(new Error('Invalid email or password.'));
+          const emailExists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+          if (emailExists) {
+            reject(new Error('Invalid password for this account.'));
+          } else {
+            reject(new Error('Account not found. Please register under "Create Account" or sign in as demo@econova.ai (password: password123).'));
+          }
         }
       }, 800);
     });
@@ -218,24 +250,33 @@ export async function signIn(email, password, rememberMe = true) {
 // 2. Email/Password Sign Up
 export async function signUp(email, password, fullName, country = 'IN') {
   if (isFirebaseEnabled && firebaseAuth) {
-    // Firebase Auth signup
-    const userCredential = await window.firebaseSignUp(email, password);
-    await window.firebaseUpdateProfile(userCredential.user, {
-      displayName: fullName
-    });
-    
-    currentUser = {
-      uid: userCredential.user.uid,
-      email: userCredential.user.email,
-      displayName: fullName,
-      isAnonymous: false,
-      isGoogle: false
-    };
-    
-    // Create new profile state
-    initializeProfile(fullName, country);
-    notifyListeners();
-    return currentUser;
+    try {
+      // Firebase Auth signup
+      const userCredential = await window.firebaseSignUp(email, password);
+      await window.firebaseUpdateProfile(userCredential.user, {
+        displayName: fullName
+      });
+      
+      currentUser = {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+        displayName: fullName,
+        isAnonymous: false,
+        isGoogle: false
+      };
+      
+      // Create new profile state
+      initializeProfile(fullName, country);
+      notifyListeners();
+      return currentUser;
+    } catch (err) {
+      if (isApiKeyError(err)) {
+        console.warn('EcoNova: Firebase API key issue detected. Falling back to Demo Auth Mode.', err);
+        isFirebaseEnabled = false;
+        return signUp(email, password, fullName, country);
+      }
+      throw err;
+    }
   } else {
     // Simulated Auth signup
     return new Promise((resolve, reject) => {
@@ -279,8 +320,17 @@ export async function signUp(email, password, fullName, country = 'IN') {
 // 3. Continue with Google
 export async function signInWithGoogle() {
   if (isFirebaseEnabled && firebaseAuth) {
-    const userCredential = await window.firebaseGoogleSignIn();
-    return userCredential.user;
+    try {
+      const userCredential = await window.firebaseGoogleSignIn();
+      return userCredential.user;
+    } catch (err) {
+      if (isApiKeyError(err)) {
+        console.warn('EcoNova: Firebase API key issue detected. Falling back to Demo Auth Mode.', err);
+        isFirebaseEnabled = false;
+        return signInWithGoogle();
+      }
+      throw err;
+    }
   } else {
     // Simulated Google Login Popup
     return new Promise((resolve) => {
@@ -341,7 +391,12 @@ export async function signOutUser() {
   currentUser = null;
 
   if (isFirebaseEnabled && firebaseAuth) {
-    await window.firebaseSignOut();
+    try {
+      await window.firebaseSignOut();
+    } catch (err) {
+      console.warn('EcoNova: Firebase sign out error, clearing local state.', err);
+      notifyListeners();
+    }
   } else {
     notifyListeners();
   }
@@ -350,7 +405,16 @@ export async function signOutUser() {
 // 6. Forgot Password
 export async function resetPassword(email) {
   if (isFirebaseEnabled && firebaseAuth) {
-    await window.firebaseResetPassword(email);
+    try {
+      await window.firebaseResetPassword(email);
+    } catch (err) {
+      if (isApiKeyError(err)) {
+        console.warn('EcoNova: Firebase API key issue detected. Falling back to Demo Auth Mode.', err);
+        isFirebaseEnabled = false;
+        return resetPassword(email);
+      }
+      throw err;
+    }
   } else {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
