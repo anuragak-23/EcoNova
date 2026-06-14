@@ -12,12 +12,14 @@ Track, understand, and reduce your carbon footprint through AI-powered insights,
 <br/>
 
 [![Status: Active](https://img.shields.io/badge/Status-Active-emerald?style=flat-square)](#)
-[![AI: Gemini](https://img.shields.io/badge/AI-Gemini-blue?style=flat-square)](#)
+[![Languages: HTML/CSS/JS/Node](https://img.shields.io/badge/Languages-HTML%20%7C%20CSS%20%7C%20JS%20%7C%20Node-blue?style=flat-square)](#)
+[![AI: Gemini](https://img.shields.io/badge/AI-Gemini%201.5%20Flash-violet?style=flat-square)](#)
 [![Deployment: Vercel](https://img.shields.io/badge/Deployment-Vercel-black?style=flat-square)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple?style=flat-square)](#)
 
 </div>
 
+---
 
 ## 💡 Why EcoNova?
 
@@ -56,44 +58,130 @@ Project your carbon footprint over 1, 5, and 10 years, comparing current habits 
 
 ## ⚙️ System Architecture
 
+EcoNova is engineered as a secure, fast, and modern static application powered by Serverless backend routes:
+
 ```mermaid
 graph TD
-    User([User]) --> EcoNova[EcoNova Platform]
-    EcoNova --> Calculator[Carbon Calculator]
-    EcoNova --> Dashboard[Analytics Dashboard]
-    EcoNova --> AICoach[AI Coach]
-    EcoNova --> Avatar[Carbon Avatar]
-    Calculator --> Gemini[Gemini AI]
-    Dashboard --> Gemini
-    AICoach --> Gemini
-    Avatar --> Gemini
+    User([User]) --> EcoNova[EcoNova Client App]
+    
+    subgraph Frontend (Vanilla Web)
+        EcoNova --> Auth[Dual-Mode Auth]
+        EcoNova --> Calculator[Carbon Calculator]
+        EcoNova --> Dashboard[Analytics Dashboard]
+        EcoNova --> AICoach[AI Climate Coach]
+        EcoNova --> Avatar[Carbon Avatar]
+    end
+    
+    subgraph Secure Backend (Vercel Serverless)
+        Auth --> FirebaseProxy[/api/firebase-config]
+        AICoach --> GeminiProxy[/api/gemini]
+        GeminiProxy --> GeminiAPI[Google Gemini API]
+    end
 ```
 
-*An image-based architecture diagram will be placed here: `![System Architecture](screenshots/system-architecture.png)`*
+### Backend Security Architecture
+*   **Zero Client Exposure**: Google Gemini API keys are never exposed or loaded in the client-side bundle. All inference prompts are resolved server-side through secure Vercel Serverless Functions.
+*   **Firebase Credentials**: Firebase configuration values are retrieved dynamically at runtime from secure environment variables, protecting keys from being committed to public source control.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Detailed Tech Stack
 
-*   **Frontend**: HTML5, Vanilla CSS3 (Custom properties/transitions), ES6+ JavaScript.
-*   **AI**: Google Gemini 1.5 Flash (via secure backend REST endpoints).
-*   **Authentication**: Firebase Authentication with dynamic demo fallback.
-*   **Visualization**: Chart.js (custom gradients & animated trend lines).
-*   **Deployment**: Vercel (Static hosting + Node.js Serverless Functions).
-*   **Storage**: LocalStorage API for offline persistence and session state.
+EcoNova is built with vanilla web technologies to minimize payload size and maximize startup performance, avoiding bulky framework dependencies:
+
+*   **Languages**: 
+    *   **HTML5**: Semantic elements, forms, and layout structure.
+    *   **CSS3**: Custom property design systems, CSS grid/flexbox layouts, responsive scaling (`clamp()`), and visual transitions.
+    *   **JavaScript (ES6+)**: Modular modules, client-side routing, canvas rendering, state managers, and dynamic layout templates.
+    *   **Node.js**: Backend serverless endpoint runtimes.
+*   **AI Engine**: Google Gemini 1.5 Flash (via REST API server-side).
+*   **Visualization**: Chart.js (with custom linear gradients and dynamic grid updates).
+*   **Effects & Gamification**:
+    *   **Canvas Confetti**: Achievement celebrations.
+    *   **Web Audio API**: Real-time synthesized success chimes without loading asset files.
+*   **Authentication**: Firebase Authentication (Email/Password & Google OAuth) with dynamic demo fallback.
+*   **Hosting & Deployment**: Vercel (static asset CDN hosting + Node.js Serverless runtime).
+*   **Storage**: LocalStorage API for session states and persistent guest progress.
 
 ---
 
-## 📐 Carbon Calculation Methodology
+## 📁 Repository Directory Structure
 
-Emissions calculations utilize activity-based emission factors from recognized scientific databases:
+```
+carbon-footprint-platform/
+├── api/                        # Vercel Serverless Functions (Node.js)
+│   ├── gemini.js               # Resolves AI prompts securely using GEMINI_API_KEY
+│   ├── gemini-status.js        # Tells client if Gemini is active or in offline demo mode
+│   └── firebase-config.js      # Proxies Firebase credentials securely
+├── css/                        # Custom Styling
+│   └── styles.css              # Custom design system tokens, animations, and typography
+├── js/                         # Client-Side Modules (ES6 Modules)
+│   ├── actions.js              # Eco-action logging, metrics calculations, and filters
+│   ├── ai.js                   # AI Coach prompt formatting, HTML rendering, and fallbacks
+│   ├── app.js                  # Main controller, navigation routing, and canvas scorecard export
+│   ├── auth.js                 # Dynamic auth check, register/login, and onboarding flow
+│   ├── calculator.js           # Multi-step carbon calculator form wizard
+│   ├── dashboard.js            # Chart.js charts initialization and stat counters
+│   ├── data.js                 # Coefficients, questions, levels, and tips constants
+│   └── storage.js              # LocalStorage wrapper, daily log tracker, and streak calculations
+├── index.html                  # Single-page application template
+├── .env.local.example          # Environment variables template
+└── README.md                   # Product documentation
+```
+
+---
+
+## 📐 Carbon Calculation Methodology & Factors
+
+Carbon computations utilize activity-based emission factors from recognized scientific databases (e.g., IPCC, DEFRA, and CEA India):
 
 $$\text{Total Footprint (t CO}_{2}\text{e/year)} = \text{Transport} + \text{Energy} + \text{Food} + \text{Lifestyle}$$
 
-*   **Transport**: Commute mode factors (petrol/electric/transit) $\times$ distance $\times$ frequency + domestic/international flights.
-*   **Energy**: Monthly electricity bills $\times$ regional grid factor (e.g., $0.82\text{ kg CO}_2/\text{kWh}$ India grid average) + LPG/natural gas usage.
-*   **Food**: Diet baseline (vegan/vegetarian/meat) adjusted for food waste % and local/imported sourcing.
-*   **Lifestyle**: Clothing purchases, electronics habits, and shopping frequency multipliers.
+### Emission Coefficients
+
+| Category | Parameter | Base Emission Factor | Description |
+|---|---|---|---|
+| **Transport** | Petrol Car | $0.18\text{ kg CO}_2/\text{km}$ | Light passenger vehicle factor |
+| **Transport** | Electric Car | $0.05\text{ kg CO}_2/\text{km}$ | Grid emissions factor equivalent |
+| **Transport** | Commute Mode: WFH | $0.00\text{ kg CO}_2/\text{km}$ | Work from home baseline |
+| **Transport** | Public Transit | $0.03\text{ kg CO}_2/\text{km}$ | Shared occupancy average |
+| **Transport** | Flights (Short Haul) | $0.15\text{ kg CO}_2/\text{passenger-km}$ | Flights $< 3\text{ hrs}$ |
+| **Transport** | Flights (Long Haul) | $0.11\text{ kg CO}_2/\text{passenger-km}$ | Flights $> 3\text{ hrs}$ |
+| **Energy** | Electricity Grid | $0.82\text{ kg CO}_2/\text{kWh}$ | Central Electricity Authority India average |
+| **Energy** | Renewable Energy (Full) | $0.082\text{ kg CO}_2/\text{kWh}$ | $90\%$ offset multiplier |
+| **Energy** | Renewable Energy (Partial) | $0.41\text{ kg CO}_2/\text{kWh}$ | $50\%$ offset multiplier |
+| **Energy** | LPG Cylinders | $2.98\text{ kg CO}_2/\text{kg LPG}$ | Direct combustion emission factor |
+| **Food** | Diet: Meat Heavy | $2.50\text{ tonnes CO}_2/\text{year}$ | High beef/lamb consumption baseline |
+| **Food** | Diet: Vegetarian | $1.20\text{ tonnes CO}_2/\text{year}$ | Lacto-ovo vegetarian baseline |
+| **Food** | Diet: Vegan | $0.70\text{ tonnes CO}_2/\text{year}$ | Plant-based baseline |
+| **Lifestyle** | Clothing Habits | Fast: $0.60\text{ t}$, Moderate: $0.30\text{ t}$, Minimal: $0.10\text{ t}$ | Yearly fashion purchases |
+| **Lifestyle** | Electronics Purchases | $0.07\text{ tonnes CO}_2/\text{purchase}$ | Production and lifecycle average |
+
+---
+
+## 🏆 Gamification & Progress Mechanics
+
+EcoNova features an integrated progression ecosystem to incentivize carbon footprint reductions:
+
+### 1. Level Progression & XP
+Users earn **Eco-Points** by completing logging tasks. Level boundaries map directly to cumulative points:
+*   `Level 1 (🌱 Eco-Curious)`: $0 - 500\text{ pts}$
+*   `Level 2 (🌿 Green Beginner)`: $501 - 1,500\text{ pts}$
+*   `Level 3 (🌳 Nature Ally)`: $1,501 - 4,000\text{ pts}$
+*   `Level 4 (🌲 Earth Guardian)`: $4,001 - 10,000\text{ pts}$
+*   `Level 5 (🌍 Climate Champion)`: $> 10,000\text{ pts}$
+
+### 2. Evolving Carbon Avatar Ranks
+Your visual climate rank shifts dynamically based on your computed yearly emissions footprint:
+*   `🌫️ High Polluter`: Emissions $> 10.0\text{ tonnes CO}_2/\text{year}$
+*   `🌿 Eco Learner`: Emissions between $5.0$ and $10.0\text{ tonnes CO}_2/\text{year}$
+*   `🌳 Climate Hero`: Emissions between $2.0$ and $5.0\text{ tonnes CO}_2/\text{year}$
+*   `🌎 Planet Guardian`: Emissions $\le 2.0\text{ tonnes CO}_2/\text{year}$ (Paris Climate Agreement target)
+
+### 3. Streak Engine
+*   **Logging Check-Ins**: Log at least 1 eco-action daily to increment your streak counter.
+*   **UI Indicator**: A dedicated flame icon glows and increases in intensity as your streak increases.
+*   **Bonus Points**: Points multipliers are awarded at milestones (7 days, 14 days, 30 days).
 
 ---
 
@@ -102,7 +190,7 @@ $$\text{Total Footprint (t CO}_{2}\text{e/year)} = \text{Transport} + \text{Ener
 ### User Profile Schema
 ```javascript
 {
-  id: "uuid",
+  id: "uuid-identifier",
   name: "Eco Explorer",
   footprint: {
     total: 3.2,              // tonnes CO₂/year
@@ -110,12 +198,16 @@ $$\text{Total Footprint (t CO}_{2}\text{e/year)} = \text{Transport} + \text{Ener
     energy: 0.9,
     food: 0.7,
     lifestyle: 0.5,
-    lastCalculated: "ISO-date"
+    lastCalculated: "2026-06-15T00:00:00.000Z"
   },
   level: 3,
   ecoPoints: 1240,
   streak: 7,
-  badges: ["calculator-completed", "streak-level-1"]
+  badges: [
+    "calculator-completed", 
+    "streak-level-1",
+    "energy-saver-gold"
+  ]
 }
 ```
 
