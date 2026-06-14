@@ -421,19 +421,6 @@ Total Footprint (tonnes CO₂e/year) =
 
 ---
 
-## ⚙️ Environment Variables
-
-To configure the project locally and in production on Vercel, copy `.env.local.example` to `.env.local` (local only) and set the following variables:
-
-- **`GEMINI_API_KEY`**: Your Google Gemini API Key. Used securely on the server side by `/api/gemini` serverless functions.
-- **`FIREBASE_API_KEY`**: Firebase public API Key (if using Firebase Authentication).
-- **`FIREBASE_AUTH_DOMAIN`**: Firebase authentication domain.
-- **`FIREBASE_PROJECT_ID`**: Firebase project ID.
-- **`FIREBASE_STORAGE_BUCKET`**: Firebase storage bucket URI.
-- **`FIREBASE_MESSAGING_SENDER_ID`**: Firebase messaging sender ID.
-- **`FIREBASE_APP_ID`**: Firebase application ID.
-
----
 
 ## 🚀 Vercel Production Deployment
 
