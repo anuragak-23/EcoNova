@@ -25,6 +25,24 @@ function isApiKeyError(err) {
   return msg.includes('api-key') || msg.includes('api_key') || code.includes('api-key') || code.includes('api_key') || msg.includes('invalid-key') || code.includes('invalid-key') || msg.includes('api key');
 }
 
+function isValidConfig(config) {
+  if (!config || !config.apiKey || !config.projectId) return false;
+  
+  const key = config.apiKey.toLowerCase();
+  const pid = config.projectId.toLowerCase();
+  
+  return (
+    key !== "" &&
+    key !== "your_api_key" &&
+    !key.includes("your_") &&
+    !key.includes("placeholder") &&
+    pid !== "" &&
+    pid !== "your_project_id" &&
+    !pid.includes("your_") &&
+    !pid.includes("placeholder")
+  );
+}
+
 function getMockUsers() {
   try {
     const raw = localStorage.getItem(MOCK_USERS_KEY);
@@ -63,7 +81,7 @@ export async function initAuth(onStateChanged) {
     const res = await fetch('/api/firebase-config');
     if (res.ok) {
       const data = await res.json();
-      if (data.apiKey && data.apiKey !== "YOUR_API_KEY" && data.projectId && data.projectId !== "YOUR_PROJECT_ID") {
+      if (isValidConfig(data)) {
         finalFirebaseConfig = data;
         isConfigValid = true;
       }
@@ -75,7 +93,7 @@ export async function initAuth(onStateChanged) {
   // Fallback to local import if serverless route is not configured or failed
   if (!isConfigValid) {
     const localConfig = FIREBASE_CONFIG;
-    if (localConfig && localConfig.apiKey && localConfig.apiKey !== "YOUR_API_KEY" && localConfig.projectId && localConfig.projectId !== "YOUR_PROJECT_ID") {
+    if (isValidConfig(localConfig)) {
       finalFirebaseConfig = localConfig;
       isConfigValid = true;
     }
