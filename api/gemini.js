@@ -43,7 +43,7 @@ Keep the output clean, modern, and structured in standard HTML tags (div, p, ul,
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Gemini API call failed:', errorText);
-      return res.status(502).json({ error: 'Failed to fetch from Google Gemini API.' });
+      return res.status(502).json({ error: 'Failed to fetch from Google Gemini API: ' + errorText });
     }
 
     const json = await response.json();
